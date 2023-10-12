@@ -8,13 +8,9 @@ module.exports = {
         else
             cpf = req.params.cpf
 
-        if (!cpf) {
-            return res.status(400).json({status: false, msg: "O cpf não pode ser nulo"})
-        }
-
-        const {error, value} = Joi.string().validate(cpf)
+        const {error, value} = Joi.string().required.validate(cpf)
         if(error) {
-            return res.status(400).json({status: false, msg: "O cpf deve ser uma string"})
+            return res.status(400).json({status: false, msg: "O cpf não pode ser nulo e deve ser uma string"})
         }
 
         if (cpf.length != 11) {

@@ -3,3 +3,4 @@ DB_HOST=localhost
 DB_NAME=CCIBonsFluidos
 DB_USER=postgres
 DB_PASSWORD=postgres
+JWT_SECRET=Abcasdfqwr
