@@ -9,33 +9,32 @@ module.exports = {
         return pessoasFisicas
     },
     
-    inserir: async function(codigo, cpf, nome, idade) {
+    inserir: async function(codigo, cpf, nome, dataNascimento) {
         const novaPessoaFisica = await PessoaFisicaModel.create({
             codigo: codigo,
             cpf: cpf,
             nome: nome,
-            idade: idade
+            dataNascimento: iddataNascimentoade
         })
         
         return novaPessoaFisica
     },
 
-    atualizar: async function(codigo, cpf, nome, idade) {
+    atualizar: async function(codigo, cpf, nome, dataNascimento) {
         return await PessoaFisicaModel.update(
             {
                 cpf: cpf,
                 nome: nome,
-                idade: idade
+                dataNascimento: dataNascimento
             }, {
                 where: { codigo: codigo }
             }
         )
     },
 
-    // nao tem exclusao
-    // excluir: async function(codigo) {
-    //     return await PessoaFisicaModel.destroy({where: { codigo: codigo }})
-    // },
+    excluir: async function(codigo) {
+        return await PessoaFisicaModel.destroy({where: { codigo: codigo }})
+    },
 
     getByCodigo: async function(codigo) {
         return await PessoaFisicaModel.findByPk(codigo)

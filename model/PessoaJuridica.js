@@ -4,11 +4,16 @@ const AcessoModel = require("../model/Acesso")
 
 const PessoaJuridicaModel = sequelize.define('PessoaJuridica', 
     {
+        codigo: {
+            type: DataTypes.STRING(12),
+            primaryKey: true,
+            allowNull: false
+        },
         cnpj: {
             type: DataTypes.STRING(14),
             allowNull: false
         },
-        nome: {
+        razaoSocial: {
             type: DataTypes.STRING,
             allowNull: false
         },

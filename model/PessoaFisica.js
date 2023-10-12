@@ -4,6 +4,11 @@ const AcessoModel = require("../model/Acesso")
 
 const PessoaFisicaModel = sequelize.define('PessoaFisica', 
     {
+        codigo: {
+            type: DataTypes.STRING(12),
+            primaryKey: true,
+            allowNull: false
+        },
         cpf: {
             type: DataTypes.STRING(11),
             allowNull: false
@@ -12,8 +17,8 @@ const PessoaFisicaModel = sequelize.define('PessoaFisica',
             type: DataTypes.STRING,
             allowNull: false
         },
-        idade: {
-            type: DataTypes.INTEGER,
+        dataNascimento: {
+            type: DataTypes.DATE,
             allowNull: false
         },
     }

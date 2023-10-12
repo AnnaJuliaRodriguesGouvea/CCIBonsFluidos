@@ -32,10 +32,9 @@ module.exports = {
         )
     },
 
-    // nao tem exclusao
-    // excluir: async function(codigo) {
-    //     return await AcessoModel.destroy({where: { codigo: codigo }})
-    // },
+    excluir: async function(codigo) {
+        return await AcessoModel.destroy({where: { codigo: codigo }})
+    },
 
     getByCodigo: async function(codigo) {
         return await AcessoModel.findByPk(codigo)
