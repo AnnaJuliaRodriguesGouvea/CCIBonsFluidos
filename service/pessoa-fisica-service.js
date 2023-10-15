@@ -35,20 +35,22 @@ module.exports = {
     },
 
     buscarCodigo: async function(codigo) {
+        const acesso = await acessoService.getAcessoByCodigo(codigo)
         const pessoaFisica = await this.getPessoaFisicaByCodigo(codigo)
-        if (pessoaFisica) {
-            return {status: 200, data: pessoaFisica}
+        if (acesso && pessoaFisica) {
+            return {status: 200, data: {acesso: acesso, pessoaFisica: pessoaFisica}}
         }
         return {status: 404, data: "Não existe uma pessoa física com esse código"}
     },
 
-    cadastrarPessoaFisica: async function(codigo, email, senha, isAdmin, cpf, nome, dataNascimento) {
-        const acessoResponse = await acessoService.cadastrarAcesso(codigo, email, senha, isAdmin)
+    cadastrarPessoaFisica: async function(email, senha, isAdmin, cpf, nome, dataNascimento) {
+        if(await this.existeCPF(cpf)) {
+            return {status: 409, data: "Já existe um cadastro com esse CPF"}
+        }
+        
+        const acessoResponse = await acessoService.cadastrarAcesso(email, senha, isAdmin)
         if(acessoResponse.data instanceof AcessoModel) {
-            if(await this.existeCPF(cpf)) {
-                return {status: 409, data: "Já existe um cadastro com esse CPF"}
-            }
-            const novaPessoaFisica = await pessoaFisicaDao.inserir(codigo, cpf, nome, dataNascimento)
+            const novaPessoaFisica = await pessoaFisicaDao.inserir(acessoResponse.data.codigo, cpf, nome, dataNascimento)
             if (novaPessoaFisica instanceof PessoaFisicaModel) {
                 return {status: 201, data: novaPessoaFisica}
             }
@@ -59,14 +61,16 @@ module.exports = {
     },
 
     atualizarPessoaFisica: async function(codigoLogado, codigo, email, senha, isAdmin, cpf, nome, dataNascimento) {
-        const acessoResponse = await acessoService.cadastrarAcesso(codigo, email, senha, isAdmin)
-        if(acessoResponse.data instanceof AcessoModel) {
+        const acessoResponse = await acessoService.atualizarAcesso(codigoLogado, codigo, email, senha, isAdmin)
+        if(acessoResponse.status === 200) {
+            console.log("Entrei")
             if(await acessoService.isAdmin(codigoLogado) || codigoLogado === codigo) {
                 const [response] = await atualizarDadosPessoaFisica(codigo, cpf, nome, dataNascimento)
                 return {status: 200, data: response}
             }
             return {status: 403, data: "Você não possui permissão para alterar dados de outra conta"}
         } else {
+            console.log(acessoResponse)
             return acessoResponse;
         }
     },

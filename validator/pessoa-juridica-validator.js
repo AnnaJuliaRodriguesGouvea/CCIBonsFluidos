@@ -13,10 +13,10 @@ module.exports = {
             return res.status(400).json({status: false, msg: "O cnpj não pode ser nulo e deve ser uma string"})
         }
 
-        if (cnpj.length != 14) {
+        if (cnpj.length !== 14) {
             cnpj = cnpj.replaceAll(".", "")
             cnpj = cnpj.replaceAll("-", "")
-            cnpj = cpcnpjf.replaceAll("/", "")
+            cnpj = cnpj.replaceAll("/", "")
             const {error, value} = Joi.string().length(14).required().validate(cnpj)
             if(error) {
                 return res.status(400).json({status: false, msg: "O cnpj não é válido"})

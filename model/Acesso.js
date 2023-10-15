@@ -4,7 +4,8 @@ const sequelize = require("../helpers/bd-config")
 const AcessoModel = sequelize.define('Acesso', 
     {
         codigo: {
-            type: DataTypes.STRING(12),
+            type: DataTypes.INTEGER,
+            autoIncrement: true,
             primaryKey: true,
             allowNull: false
         },
@@ -17,6 +18,10 @@ const AcessoModel = sequelize.define('Acesso',
             allowNull: false
         },
         isAdmin: {
+            type: DataTypes.BOOLEAN,
+            allowNull: false
+        },
+        isExcluido: {
             type: DataTypes.BOOLEAN,
             allowNull: false
         }

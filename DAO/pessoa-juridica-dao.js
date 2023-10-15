@@ -13,7 +13,8 @@ module.exports = {
         const novaPessoaJuridica = await PessoaJuridicaModel.create({
             codigo: codigo,
             cnpj: cnpj,
-            razaoSocial: razaoSocial
+            razaoSocial: razaoSocial,
+            isExcluido: false
         })
         
         return novaPessoaJuridica
@@ -31,14 +32,20 @@ module.exports = {
     },
     
     excluir: async function(codigo) {
-        return await PessoaJuridicaModel.destroy({where: { codigo: codigo }})
+        return await PessoaJuridicaModel.update(
+            {
+                isExcluido: true
+            }, {
+                where: { codigo: codigo }
+            }
+        )
     },
 
     getByCodigo: async function(codigo) {
         return await PessoaJuridicaModel.findByPk(codigo)
     },
 
-    getByCnpj: async function(cpf) {
+    getByCnpj: async function(cnpj) {
         return await PessoaJuridicaModel.findOne({ where: { cnpj: cnpj } })
     }
 }

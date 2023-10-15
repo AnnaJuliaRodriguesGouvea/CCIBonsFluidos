@@ -10,7 +10,7 @@ module.exports = {
     },
     
     inserir: async function(marca, nome, temAbas, quantidadeNoPacote, isNoturno, temEscapeUrina, quantidadeDePacote, 
-        codigo_tipo_absorvente, codigo_suavidade, codigo_fluxo, codigo_tamanho, isExcluido) {
+        codigo_tipo_absorvente, codigo_suavidade, codigo_fluxo, codigo_tamanho) {
         const novoProduto = await ProdutoModel.create({
             marca: marca,
             nome: nome,
@@ -23,14 +23,14 @@ module.exports = {
             codigo_suavidade: codigo_suavidade,
             codigo_fluxo: codigo_fluxo,
             codigo_tamanho: codigo_tamanho,
-            isExcluido: isExcluido
+            isExcluido: false
         })
         
         return novoProduto
     },
 
     atualizar: async function(codigo, marca, nome, temAbas, quantidadeNoPacote, isNoturno, temEscapeUrina, quantidadeDePacote, 
-        codigo_tipo_absorvente, codigo_suavidade, codigo_fluxo, codigo_tamanho, isExcluido) {
+        codigo_tipo_absorvente, codigo_suavidade, codigo_fluxo, codigo_tamanho) {
         return await ProdutoModel.update(
             {
                 marca: marca,
@@ -43,8 +43,7 @@ module.exports = {
                 codigo_tipo_absorvente: codigo_tipo_absorvente,
                 codigo_suavidade: codigo_suavidade,
                 codigo_fluxo: codigo_fluxo,
-                codigo_tamanho: codigo_tamanho,
-                isExcluido: isExcluido
+                codigo_tamanho: codigo_tamanho
             }, {
                 where: { codigo: codigo }
             }

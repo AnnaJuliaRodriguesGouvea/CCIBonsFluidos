@@ -1,19 +1,20 @@
-const Joi = require("joi")
+const Joi = require('joi')
+    .extend(require('@joi/date'));
 
 module.exports = {
     validaCpf: function(req, res, next) {
-        let cpf = null
+        let cpf
         if(req.body.cpf)
             cpf = req.body.cpf
         else
             cpf = req.params.cpf
 
-        const {error, value} = Joi.string().required.validate(cpf)
+        const {error, value} = Joi.string().required().validate(cpf)
         if(error) {
             return res.status(400).json({status: false, msg: "O cpf não pode ser nulo e deve ser uma string"})
         }
 
-        if (cpf.length != 11) {
+        if (cpf.length !== 11) {
             cpf = cpf.replaceAll(".", "")
             cpf = cpf.replaceAll("-", "")
             const {error, value} = Joi.string().length(11).required().validate(cpf)
@@ -36,7 +37,7 @@ module.exports = {
     },
     
     validaDataNascimento: function(req, res, next) {
-        const {error, value} = Joi.number().integer().greater(0).required().validate(req.body.dataNascimento)
+        const {error, value} = Joi.date().format('DD/MM/YYYY').utc().required().validate(req.body.dataNascimento);
         if(error) {
             return res.status(400).json({status: false, msg: "A Data de Nascimento não pode ser nula"})
         }

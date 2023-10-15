@@ -52,15 +52,12 @@ module.exports = {
         return {status: 500, data: "Desculpe, não foi possível realizar essa pesquisa"}
     },
 
-    cadastrarAcesso: async function(codigo, email, senha, isAdmin) {
-        if(!await this.existeCodigo(codigo)) {
-            if (!await this.existeEmail(email)) {
-                const acesso = await acessoDAO.inserir(codigo, email, senha, isAdmin)
-                return {status: 201, data: acesso}
-            }
-            return {status: 409, data: "Já existe um acesso com esse email"}
+    cadastrarAcesso: async function(email, senha, isAdmin) {
+        if (!await this.existeEmail(email)) {
+            const acesso = await acessoDAO.inserir(email, senha, isAdmin)
+            return {status: 201, data: acesso}
         }
-        return {status: 409, data: "Já existe um acesso com esse código"}
+        return {status: 409, data: "Já existe um acesso com esse email"}
     },
 
     atualizarAcesso: async function(codigoLogado, codigo, email, senha, isAdmin) {

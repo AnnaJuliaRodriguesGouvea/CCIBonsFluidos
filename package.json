@@ -10,12 +10,13 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@joi/date": "^2.1.0",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
-    "sequelize": "^6.33.0",
     "joi": "^17.9.2",
     "jsonwebtoken": "^9.0.0",
     "pg": "^8.11.0",
-    "pg-hstore": "^2.3.4"
+    "pg-hstore": "^2.3.4",
+    "sequelize": "^6.33.0"
   }
 }

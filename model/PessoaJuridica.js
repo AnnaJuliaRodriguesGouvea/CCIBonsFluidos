@@ -5,7 +5,7 @@ const AcessoModel = require("../model/Acesso")
 const PessoaJuridicaModel = sequelize.define('PessoaJuridica', 
     {
         codigo: {
-            type: DataTypes.STRING(12),
+            type: DataTypes.INTEGER,
             primaryKey: true,
             allowNull: false
         },
@@ -17,6 +17,10 @@ const PessoaJuridicaModel = sequelize.define('PessoaJuridica',
             type: DataTypes.STRING,
             allowNull: false
         },
+        isExcluido: {
+            type: DataTypes.BOOLEAN,
+            allowNull: false
+        }
     }
 )
 

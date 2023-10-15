@@ -14,7 +14,8 @@ module.exports = {
             codigo: codigo,
             cpf: cpf,
             nome: nome,
-            dataNascimento: iddataNascimentoade
+            dataNascimento: dataNascimento,
+            isExcluido: false
         })
         
         return novaPessoaFisica
@@ -33,7 +34,13 @@ module.exports = {
     },
 
     excluir: async function(codigo) {
-        return await PessoaFisicaModel.destroy({where: { codigo: codigo }})
+        return await PessoaFisicaModel.update(
+            {
+                isExcluido: true
+            }, {
+                where: { codigo: codigo }
+            }
+        )
     },
 
     getByCodigo: async function(codigo) {

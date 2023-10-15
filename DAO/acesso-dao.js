@@ -2,19 +2,18 @@ const AcessoModel = require("../model/Acesso.js")
 
 module.exports = {
     listar: async function(limite, pagina) {
-        const acessos = await AcessoModel.findAndCountAll({
+        return await AcessoModel.findAndCountAll({
             limit: limite,
             offset: (pagina - 1) * limite
         })
-        return acessos
     },
     
-    inserir: async function(codigo, email, senha, isAdmin) {
+    inserir: async function(email, senha, isAdmin) {
         const novoAcesso = await AcessoModel.create({
-            codigo: codigo,
             email: email.toLowerCase(),
             senha: senha,
-            isAdmin: isAdmin
+            isAdmin: isAdmin,
+            isExcluido: false
         })
         
         return novoAcesso
@@ -33,7 +32,13 @@ module.exports = {
     },
 
     excluir: async function(codigo) {
-        return await AcessoModel.destroy({where: { codigo: codigo }})
+        return await AcessoModel.update(
+            {
+                isExcluido: true
+            }, {
+                where: { codigo: codigo }
+            }
+        )
     },
 
     getByCodigo: async function(codigo) {
@@ -41,6 +46,7 @@ module.exports = {
     },
 
     getByEmail: async function(email) {
+        console.log(email)
         return await AcessoModel.findOne({ where: { email: email.toLowerCase() } })
     }
 }

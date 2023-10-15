@@ -9,7 +9,7 @@ const transacaoDao = require("../DAO/transacao-dao")
 const acessoDao = require("../DAO/acesso-dao")
 
 async function inicializarSuperAcesso() {
-    return await acessoDao.inserir("RSUPER000001", "superadmin@admin.com", "admin123", true)
+    return await acessoDao.inserir("superadmin@admin.com", "admin123", true)
 }
 
 async function inicializarFluxo() {

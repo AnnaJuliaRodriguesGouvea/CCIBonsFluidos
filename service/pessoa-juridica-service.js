@@ -35,20 +35,22 @@ module.exports = {
     },
 
     buscarCodigo: async function(codigo) {
+        const acesso = await acessoService.getAcessoByCodigo(codigo)
         const pessoaJuridica = await this.getPessoaJuridicaByCodigo(codigo)
-        if (pessoaJuridica) {
-            return {status: 200, data: pessoaJuridica}
+        if (acesso && pessoaJuridica) {
+            return {status: 200, data: {acesso: acesso, pessoaJuridica: pessoaJuridica}}
         }
         return {status: 404, data: "Não existe uma pessoa jurídica com esse código"}
     },
 
-    cadastrarPessoaJuridica: async function(codigo, email, senha, isAdmin, cnpj, razaoSocial) {
-        const acessoResponse = await acessoService.cadastrarAcesso(codigo, email, senha, isAdmin)
+    cadastrarPessoaJuridica: async function(email, senha, isAdmin, cnpj, razaoSocial) {
+        if(await this.existeCNPJ(cnpj)) {
+            return {status: 409, data: "Já existe um cadastro com esse CNPJ"}
+        }
+        
+        const acessoResponse = await acessoService.cadastrarAcesso(email, senha, isAdmin)
         if(acessoResponse.data instanceof AcessoModel) {
-            if(await this.existeCNPJ(cnpj)) {
-                return {status: 409, data: "Já existe um cadastro com esse CNPJ"}
-            }
-            const novaPessoaJuridica = await pessoaJuridicaDao.inserir(codigo, cnpj, razaoSocial)
+            const novaPessoaJuridica = await pessoaJuridicaDao.inserir(acessoResponse.data.codigo, cnpj, razaoSocial)
             if (novaPessoaJuridica instanceof PessoaJuridicaModel) {
                 return {status: 201, data: novaPessoaJuridica}
             }
@@ -59,8 +61,8 @@ module.exports = {
     },
 
     atualizarPessoaJuridica: async function(codigoLogado, codigo, email, senha, isAdmin, cnpj, razaoSocial) {
-        const acessoResponse = await acessoService.cadastrarAcesso(codigo, email, senha, isAdmin)
-        if(acessoResponse.data instanceof AcessoModel) {
+        const acessoResponse = await acessoService.atualizarAcesso(codigoLogado,codigo, email, senha, isAdmin)
+        if(acessoResponse.status === 200) {
             if(await acessoService.isAdmin(codigoLogado) || codigoLogado === codigo) {
                 const [response] = await atualizarDadosPessoaJuridica(codigo, cnpj, razaoSocial)
                 return {status: 200, data: response}

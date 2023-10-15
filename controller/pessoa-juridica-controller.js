@@ -19,19 +19,17 @@ router.get("/:codigo",
     autenticacaoValidator.validarToken,
     acessoValidator.validaCodigo,
     async (req, res) => {
-        const response = await pessoaJuridicaService.buscarCodigo(req.body.codigo)
+        const response = await pessoaJuridicaService.buscarCodigo(req.params.codigo)
         res.status(response.status).json(response.data)
 })
 
 router.post("/",
-    acessoValidator.validaCodigo,
     acessoValidator.validaEmail,
     acessoValidator.validaSenha,
     pessoaJuridicaValidator.validaCnpj,
     pessoaJuridicaValidator.validaRazaoSocial,
     async (req, res) => {
         const response = await pessoaJuridicaService.cadastrarPessoaJuridica(
-            req.body.codigo,
             req.body.email,
             req.body.senha, 
             false,
@@ -44,14 +42,12 @@ router.post("/",
 router.post("/admin",
     autenticacaoValidator.validarToken,
     acessoValidator.validaIsAdmin,
-    acessoValidator.validaCodigo,
     acessoValidator.validaEmail,
     acessoValidator.validaSenha,
     pessoaJuridicaValidator.validaCnpj,
     pessoaJuridicaValidator.validaRazaoSocial,
     async (req, res) => {
         const response = await pessoaJuridicaService.cadastrarPessoaJuridica(
-            req.body.codigo,
             req.body.email,
             req.body.senha, 
             true,
@@ -72,7 +68,7 @@ router.put("/:codigo",
     async (req, res) => {
         const response = await pessoaJuridicaService.atualizarPessoaJuridica(
             req.codigoLogado,
-            req.body.codigo,
+            req.params.codigo,
             req.body.email,
             req.body.senha,
             req.body.isAdmin,
@@ -86,7 +82,7 @@ router.delete("/:codigo",
     autenticacaoValidator.validarToken,
     acessoValidator.validaCodigo,
     async (req, res) => {
-        const response = await pessoaJuridicaService.excluirPessoaJuridica(req.codigoLogado, req.body.codigo)
+        const response = await pessoaJuridicaService.excluirPessoaJuridica(req.codigoLogado, req.params.codigo)
         res.status(response.status).json(response.data)
 })
 

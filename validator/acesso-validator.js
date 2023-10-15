@@ -4,9 +4,13 @@ const acessoService = require("../service/acesso-service")
 module.exports = {
 
     validaCodigo: function(req, res, next) {
-        let codigo = req.body.codigo;
+        let codigo
+        if(req.body.codigo)
+            codigo = req.body.codigo
+        else
+            codigo = req.params.codigo
 
-        const {error, value} = Joi.string().length(12).required().validate(codigo)
+        const {error, value} = Joi.number().integer().required().validate(codigo)
         if(error) {
             return res.status(400).json({status: false, msg: "O código não é válido"})
         }
