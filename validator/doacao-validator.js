@@ -34,12 +34,12 @@ module.exports = {
             return res.status(400).json({status: false, msg: "É necessario informar o código de transação, deve ser um valor inteiro"})
         }
 
-        if([0, 1, 2].includes(req.body.codigo_transacao)){
+        if([1, 2].includes(req.body.codigo_transacao)){
             req.body.codigo_transacao = value
             return next()
         }
         else{
-            return res.status(403).json({status: false, msg: "Informe um código de transação existente"})
+            return res.status(403).json({status: false, msg: "Informe um código de transação valido"})
         }
         
     },
