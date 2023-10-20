@@ -22,26 +22,6 @@ module.exports = {
         return novaDoacao
     },
 
-    atualizar: async function(codigo, data, quantidade, codigo_transacao, codigo_produto, codigo_acesso, cnpj_destino) {
-        return await DoacaoModel.update(
-            {
-                data: data,
-                quantidade: quantidade,
-                codigo_transacao: codigo_transacao,
-                codigo_produto: codigo_produto,
-                codigo_acesso: codigo_acesso,
-                cnpj_destino: cnpj_destino
-            }, {
-                where: { codigo: codigo }
-            }
-        )
-    },
-
-    // nao tem exclusao
-    // excluir: async function(codigo) {
-    //     return await DoacaoModel.destroy({where: { codigo: codigo }})
-    // },
-
     getByCodigo: async function(codigo) {
         return await DoacaoModel.findByPk(codigo)
     },
