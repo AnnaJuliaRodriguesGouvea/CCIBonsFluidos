@@ -1,5 +1,6 @@
 const doacaoDAO = require("../DAO/doacao-dao")
 const DoacaoModel = require("../model/Doacao")
+const produtoService = require("../service/product-service")
 
 module.exports = {
     existeCodigo: async function(codigo) {
@@ -27,6 +28,16 @@ module.exports = {
     },
 
     cadastrarDoacao: async function(data, quantidade, codigo_transacao, codigo_produto, codigo_acesso, cnpj_destino) {
+
+        if(codigo_transacao === 1) {
+            const entrada = await produtoService.incrementPackage(codigo_produto, quantidade)
+        }
+        else if(codigo_transacao === 2) {
+            const saida = await produtoService.decrementPackage(codigo_produto, quantidade)
+            if(saida.status === 404){
+                return {status: saida.status, data: saida.data}
+            }
+        }
 
         const novaDoacao = await doacaoDAO.inserir(data, quantidade, codigo_transacao, codigo_produto, codigo_acesso, cnpj_destino)
 

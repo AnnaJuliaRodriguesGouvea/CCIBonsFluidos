@@ -63,4 +63,18 @@ module.exports = {
     getByCodigo: async function(codigo) {
         return await ProdutoModel.findByPk(codigo)
     },
+
+    entradaDePacote: async function(codigo, quantidade) {
+        return await ProdutoModel.increment("quantidadeDePacote", {
+            by: quantidade,
+            where: {codigo: codigo}
+        })
+    },
+
+    saidaDePacote: async function(codigo, quantidade) {
+        return await ProdutoModel.increment("quantidadeDePacote", {
+            by: -quantidade,
+            where: {codigo: codigo}
+        })
+    }
 }

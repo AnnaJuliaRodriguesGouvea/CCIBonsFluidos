@@ -60,5 +60,21 @@ module.exports = {
                 return {status: 200, data: response}
             }
             return {status: 404, data: "Não existe um produto com esse código"}
+    },
+
+    incrementPackage: async function(codigo, quantidade) {
+        const response = await produtoDao.entradaDePacote(codigo, quantidade)
+        return {status: 200, data: response}
+    },
+
+    decrementPackage: async function(codigo, quantidade) {
+        const product = await this.getProductByCode(codigo)
+
+        if(product.quantidadeDePacote - quantidade < 0){
+            return {status: 404, data: "Quantidade de pacotes não pode ser menor que zero"}
+        }
+
+        const response = await produtoDao.saidaDePacote(codigo, quantidade)
+        return {status: 200, data: response}
     }
 }
