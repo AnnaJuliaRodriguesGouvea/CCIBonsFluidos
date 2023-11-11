@@ -195,6 +195,7 @@ const Cadastro = ({ isAdmin }) => {
                     />}
                 {erro && <Typography variant="body2" sx={{ color: 'error.main', textAlign: 'center', fontWeight: 700 }}>{erro.message}</Typography>}
                 <FormBT>Cadastrar</FormBT>
+                {/*TODO - Após exibir o modal depois de 5seg voltar para pagina anterior de adicionar ou alterar*/}
                 {!erro && <ModalFeedbackEnvio open={open} handleClose={handleClose} texto='Cadastro realizado com sucesso!' />}
             </ContainerForm>
         </>

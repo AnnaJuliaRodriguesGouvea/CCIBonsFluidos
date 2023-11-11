@@ -26,6 +26,8 @@ const Produto = ({ selectMenuItems, isAdmin }) => {
     };
 
     const handleNextPage = () => {
+        //TODO - fazer verificacao do count se page nao é > que count/5
+        //TODO - validar se count retorna o total no banco ou total da consulta
         setPage(page + 1);
     };
 
@@ -44,6 +46,7 @@ const Produto = ({ selectMenuItems, isAdmin }) => {
                     {isAdmin && <Button variant="contained"> Adicionar </Button>}
                 </LinkEstilizado>
             </Box>
+            {/*TODO - arrumar organização das colunas*/}
             <TableContainer component={Paper}>
                 <Table sx={{ minWidth: 650 }}>
                     <DataTableProduto rows={rows} selectMenuItems={selectMenuItems} isAdmin={isAdmin} page={page} />

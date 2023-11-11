@@ -12,7 +12,7 @@ module.exports = {
         if(error) {
             return res.status(400).json({status: false, msg: "O cnpj não pode ser nulo e deve ser uma string"})
         }
-
+        //TODO - fazer o calculo do cnpj
         if (cnpj.length !== 14) {
             cnpj = cnpj.replaceAll(".", "")
             cnpj = cnpj.replaceAll("-", "")

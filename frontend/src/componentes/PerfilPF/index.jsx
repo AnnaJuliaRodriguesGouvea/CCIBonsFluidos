@@ -23,13 +23,14 @@ const PerfilPF = ({ infoPF, isAdmin, setIsAdmin }) => {
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
+        //TODO - arrumar o alterar para alterar apenas dados de acesso
         e.preventDefault();
         handleOpen()
-        alteraPF(formValues, infoPF?.pessoaFisica.codigo)
+        await alteraPF(formValues, infoPF?.pessoaFisica.codigo)
     }
 
-    const handleDelete = () => {
-        deletePF(infoPF?.pessoaFisica.codigo)
+    const handleDelete = async () => {
+        await deletePF(infoPF?.pessoaFisica.codigo)
         localStorage.clear()
         setIsAdmin(false)
         navigate('/');

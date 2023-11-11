@@ -11,13 +11,14 @@ const PerfilPJ = ({ infoPJ, isAdmin, setIsAdmin }) => {
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
+        //TODO - arrumar o alterar para alterar apenas dados de acesso
         e.preventDefault();
         handleOpen()
-        alteraPJ(formValues, infoPJ?.pessoaJuridica.codigo)
+        await alteraPJ(formValues, infoPJ?.pessoaJuridica.codigo)
     }
 
-    const handleDelete = () => {
-        deletePJ(infoPJ?.pessoaJuridica.codigo)
+    const handleDelete = async () => {
+        await deletePJ(infoPJ?.pessoaJuridica.codigo)
         localStorage.clear()
         setIsAdmin(false)
         navigate('/');

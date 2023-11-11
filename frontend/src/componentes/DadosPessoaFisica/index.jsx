@@ -4,6 +4,7 @@ const DadosPessoaFisica = ({CPF, handleChangeCPF, NomePF, handleChangeNomePF, Da
 
     return (
         <>
+            {/*TODO - colocar mascara de cpf*/}
             <CampoTexto
                 label="CPF"
                 nome="CPF"

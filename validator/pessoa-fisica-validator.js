@@ -14,6 +14,7 @@ module.exports = {
             return res.status(400).json({status: false, msg: "O cpf não pode ser nulo e deve ser uma string"})
         }
 
+        //TODO - fazer o calculo do cpf
         if (cpf.length !== 11) {
             cpf = cpf.replaceAll(".", "")
             cpf = cpf.replaceAll("-", "")

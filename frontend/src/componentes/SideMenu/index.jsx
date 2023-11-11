@@ -19,7 +19,7 @@ const ImgEstilizado = styled.img`
 `
 
 const SideMenu = ({ selectedIndex, handleListItemClick, setIsAdmin }) => {
-
+  //TODO - mudar a cor da barra lateral para enxergar a logo
   return (
     <Box
       component="nav"
@@ -64,6 +64,7 @@ const SideMenu = ({ selectedIndex, handleListItemClick, setIsAdmin }) => {
             </ListItemButton>
           </LinkEstilizado>
           <Divider />
+          {/*TODO - verificar se so admin tem isso, se nao tiver fazer a validacao*/}
           <LinkEstilizado to="/cadastrar">
             <ListItemButton>
               <ListItemIcon>
