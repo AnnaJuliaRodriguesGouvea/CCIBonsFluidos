@@ -4,7 +4,7 @@ const DadosPessoaJuridica = ({CNPJ, handleChangeCNPJ, razaoSocial, handleChangeR
 
     return (
         <>
-            {/*TODO - colocar mascara de cnpj*/}
+            {/*TODO - colocar mascara de cnpj - LUIS*/}
             <CampoTexto
                 label="CNPJ"
                 nome="CNPJ"

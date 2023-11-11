@@ -17,7 +17,7 @@ const MainPagePadrao = ({ selectedIndex, setSelectedIndex, aoClickarItemLista, e
   const navigate = useNavigate();
   const { getUserInfoPF, getUserInfoPJ, infoPF, setInfoPF, infoPJ, setInfoPJ } = useUserInfoContext();
 
-  //TODO - criar uma rota no backend para recuperar usuario
+  //TODO - criar uma rota no backend para recuperar usuario - Anna
   async function carregaInfoUsuario() {
     if (entidade == "PessoaFisica")
       await getUserInfoPF(localStorage.getItem("codigo"))
@@ -30,7 +30,7 @@ const MainPagePadrao = ({ selectedIndex, setSelectedIndex, aoClickarItemLista, e
     carregaInfoUsuario()
   }, [])
 
-  //TODO - fazer no back a verificacao de exclusao logica na rota de login
+  //TODO - fazer no back a verificacao de exclusao logica na rota de login - Anna
   if (infoPJ?.acesso.isExcluido) {
     localStorage.clear()
     alert('Acesso negado!')
@@ -51,7 +51,7 @@ const MainPagePadrao = ({ selectedIndex, setSelectedIndex, aoClickarItemLista, e
     setAnchorEl(null);
   };
 
-  //TODO - renomer para isOPEN
+  //TODO - renomer para isOPEN - Anna
   const open = Boolean(anchorEl);
   const id = open ? 'simple-popover' : undefined;
 

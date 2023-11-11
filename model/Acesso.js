@@ -21,7 +21,7 @@ const AcessoModel = sequelize.define('Acesso',
             type: DataTypes.BOOLEAN,
             allowNull: false
         },
-        //TODO - tirar o entidade do projeto - so fazer a verificacao do codigo
+        //TODO - tirar o entidade do projeto - so fazer a verificacao do codigo - Anna
         entidade: {
             type: DataTypes.STRING,
             allowNull: false

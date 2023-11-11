@@ -23,7 +23,7 @@ const PerfilPF = ({ infoPF, isAdmin, setIsAdmin }) => {
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
-        //TODO - arrumar o alterar para alterar apenas dados de acesso
+        //TODO - arrumar o alterar para alterar apenas dados de acesso - Anna
         e.preventDefault();
         handleOpen()
         await alteraPF(formValues, infoPF?.pessoaFisica.codigo)

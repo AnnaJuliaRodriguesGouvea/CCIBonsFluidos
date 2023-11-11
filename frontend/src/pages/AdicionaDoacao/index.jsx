@@ -26,12 +26,13 @@ const AdicionaDoacao = ({ selectMenuItems }) => {
     }, [])
 
     async function carregaListaDeProdutos(limit, page) {
-        //TODO - buscar produto a partir da string digitada pelo usuario: EXE: produto Intimus, usuario digita imus e ele traz todos os produtos com substring imus
+        //TODO - buscar produto a partir da string digitada pelo usuario:
+        // EXE: produto Intimus, usuario digita imus e ele traz todos os produtos com substring imus - Lemersom (apenas o front)
         return await listaProdutos(limit, page)
     }
 
     async function carregaListaPessoasJuridicas(limit, page) {
-        //TODO - Arrumar para ao inves de usar cnpj usar nome fantasia e fazer o mesmo comportamento de produtos
+        //TODO - Arrumar para ao inves de usar cnpj usar nome fantasia e fazer o mesmo comportamento de produtos - Lemersom
         return await listaPessoasJuridicas(limit, page)
     }
 
@@ -51,7 +52,7 @@ const AdicionaDoacao = ({ selectMenuItems }) => {
 
     const handleInputChange = (e) => {
         //TODO - Criar nova rota no backend para trazer todos os produtos que estoque > 0 e a rota recebe o parametros
-        // "apenasNaoExcluidos"
+        // "apenasNaoExcluidos" - Anna
         const { name, value, type, checked } = e.target;
         if (type === 'checkbox') {
             setFormValues({

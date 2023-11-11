@@ -10,7 +10,7 @@ const DataTableProduto = ({ rows, selectMenuItems, isAdmin, page }) => {
         deletaProduto(codigoDoProduto, page)
     }
 
-    //TODO - validar no back a exclusao logica
+    //TODO - validar no back a exclusao logica - ANNA
     const rowsNaoExcluidas = rows?.filter(row => !row.isExcluido)
 
     return (
@@ -53,7 +53,7 @@ const DataTableProduto = ({ rows, selectMenuItems, isAdmin, page }) => {
                             <TableCell align="right">{selectMenuItems?.suavidades.find(opcao => opcao.codigo === row.codigo_suavidade).valor}</TableCell>
                             <TableCell align="right">{selectMenuItems?.transacoes.find(opcao => opcao.codigo === row.codigo_fluxo).valor}</TableCell>
                             <TableCell align="right">{selectMenuItems?.tamanhos.find(opcao => opcao.codigo === row.codigo_tamanho).valor}</TableCell>
-                            {/*TODO - arrumar o espaçamento dos botoes editar e excluir*/}
+                            {/*TODO - arrumar o espaçamento dos botoes editar e excluir - Lemersom*/}
                             {isAdmin && <TableCell align="right">
                                 <BotaoEdicaoProduto dadosProduto={row} selectMenuItems={selectMenuItems} page={page} />
                             </TableCell>}
