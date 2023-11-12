@@ -1,10 +1,19 @@
 import styled from "@emotion/styled"
 import { ArrowBack } from "@mui/icons-material"
 import { Box, Button, Checkbox, Container, CssBaseline, FormControl, FormControlLabel, Grid, IconButton, InputLabel, MenuItem, Paper, Select, TextField, Typography } from "@mui/material"
-import { useEffect, useState } from "react"
+import {useContext, useEffect, useState} from "react"
 import { useNavigate } from "react-router-dom"
-import { useDadosProdutoContext } from "../../commom/context/dadosProduto"
 import ModalFeedbackEnvio from "../../componentes/ModalFeedbackEnvio"
+import {AppContext} from "../../commom/context/appContext.jsx";
+import {adicionarProduto} from "../../service/produtoService.jsx";
+import {DadosParametrizacao} from "../../commom/context/dadosParametrizacao.jsx";
+import {
+    getFluxo,
+    getSuavidade,
+    getTamanho,
+    getTiposAbsorvente,
+    getTransacao
+} from "../../service/parametrizacaoService.jsx";
 
 const Div = styled.div`
     width: 100vw;
@@ -13,11 +22,37 @@ const Div = styled.div`
     display: fixed;
 `
 
-const AdicionaProduto = ({ selectMenuItems }) => {
-    const { adicionarProduto, erro, setErro } = useDadosProdutoContext()
+const AdicionaProduto = () => {
+    const appContext = useContext(AppContext)
+    const {
+        listaTiposAbsorventes, setListaTiposAbsorventes,
+        listaSuavidades, setListaSuavidades,
+        listaFluxos, setListaFluxos,
+        listaTamanhos, setListaTamanhos,
+    } = useContext(DadosParametrizacao)
+
+    async function carregaDadosTipoAbsorvente(){
+        setListaTiposAbsorventes(await getTiposAbsorvente(appContext.setError))
+    }
+
+    async function carregaDadosSuavidade(){
+        setListaSuavidades(await getSuavidade(appContext.setError))
+    }
+
+    async function carregaDadosFluxo(){
+        setListaFluxos(await getFluxo(appContext.setError))
+    }
+
+    async function carregaDadosTamanho(){
+        setListaTamanhos(await getTamanho(appContext.setError))
+    }
 
     useEffect(() => {
-        setErro(null)
+        appContext.setError(null)
+        carregaDadosTipoAbsorvente()
+        carregaDadosSuavidade()
+        carregaDadosFluxo()
+        carregaDadosTamanho()
     }, [])
 
     const [formValues, setFormValues] = useState({
@@ -52,7 +87,7 @@ const AdicionaProduto = ({ selectMenuItems }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            await adicionarProduto(formValues);
+            await adicionarProduto(formValues, appContext.setError);
             handleOpen()
         } catch (err) {
             alert(err)
@@ -216,7 +251,7 @@ const AdicionaProduto = ({ selectMenuItems }) => {
                                     required
                                 >
                                     <MenuItem value="" disabled>Selecione o tipo do absorvente</MenuItem>
-                                    {selectMenuItems?.tiposAbsorventes.map(tipoAbsorvente => {
+                                    {listaTiposAbsorventes?.map(tipoAbsorvente => {
                                         return <MenuItem value={tipoAbsorvente.codigo} key={tipoAbsorvente.codigo}>{tipoAbsorvente.valor}</MenuItem>
                                     })}
                                 </Select>
@@ -233,7 +268,7 @@ const AdicionaProduto = ({ selectMenuItems }) => {
                                     required
                                 >
                                     <MenuItem value="" disabled>Selecione a suavidade</MenuItem>
-                                    {selectMenuItems?.suavidades.map(suavidades => {
+                                    {listaSuavidades?.map(suavidades => {
                                         return <MenuItem value={suavidades.codigo} key={suavidades.codigo}>{suavidades.valor}</MenuItem>
                                     })}
                                 </Select>
@@ -250,7 +285,7 @@ const AdicionaProduto = ({ selectMenuItems }) => {
                                     required
                                 >
                                     <MenuItem value="" disabled>Selecione o fluxo</MenuItem>
-                                    {selectMenuItems?.fluxos.map(fluxo => {
+                                    {listaFluxos?.map(fluxo => {
                                         return <MenuItem value={fluxo.codigo} key={fluxo.codigo}>{fluxo.valor}</MenuItem>
                                     })}
                                 </Select>
@@ -266,16 +301,16 @@ const AdicionaProduto = ({ selectMenuItems }) => {
                                     onChange={handleInputChange}
                                 >
                                     <MenuItem value="" disabled>Selecione o tamanho</MenuItem>
-                                    {selectMenuItems?.tamanhos.map(tamanho => {
+                                    {listaTamanhos?.map(tamanho => {
                                         return <MenuItem value={tamanho.codigo} key={tamanho.codigo}>{tamanho.valor}</MenuItem>
                                     })}
                                 </Select>
                             </FormControl>
-                            {erro && <Typography variant="body2" sx={{ color: 'error.main', textAlign: 'center', fontWeight: 700 }}>Todos os campos devem ser preenchidos corretamente!</Typography>}
+                            {appContext.error && <Typography variant="body2" sx={{ color: 'error.main', textAlign: 'center', fontWeight: 700 }}>Todos os campos devem ser preenchidos corretamente!</Typography>}
                             <Button type="submit" variant="contained" color="secondary">
                                 Enviar
                             </Button>
-                            {!erro && <ModalFeedbackEnvio open={open} handleClose={handleClose} texto='Produto adicionado com sucesso!' />}
+                            {!appContext.error && <ModalFeedbackEnvio open={open} handleClose={handleClose} texto='Produto adicionado com sucesso!' />}
                         </Grid>
                     </Paper>
                 </Box>

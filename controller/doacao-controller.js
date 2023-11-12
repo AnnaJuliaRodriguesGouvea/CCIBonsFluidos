@@ -29,7 +29,6 @@ router.post("/",
     doacaoValidator.validaQuantidade,
     doacaoValidator.validaCodigoTransacao,
     doacaoValidator.validaCodigoProduto,
-    doacaoValidator.validaCodigoAcesso,
     doacaoValidator.validaCnpjDestino,
     async(req, res) => {
         const response = await doacaoService.cadastrarDoacao(
@@ -37,7 +36,7 @@ router.post("/",
             req.body.quantidade,
             req.body.codigo_transacao,
             req.body.codigo_produto,
-            req.body.codigo_acesso,
+            req.codigoLogado,
             req.body.cnpj_destino,
         )
         res.status(response.status).json(response.data)

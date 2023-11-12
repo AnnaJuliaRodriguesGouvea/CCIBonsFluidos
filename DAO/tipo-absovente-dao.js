@@ -8,6 +8,10 @@ module.exports = {
         })
         return tipos
     },
+
+    listarTodos: async function() {
+        return await TipoAbsorventeModel.findAll()
+    },
     
     inserir: async function(codigo, valor) {
         const novoTipo = await TipoAbsorventeModel.create({

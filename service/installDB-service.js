@@ -1,5 +1,3 @@
-const express = require("express")
-const router = express.Router()
 const sequelize = require("../helpers/bd-config")
 const fluxoDao = require("../DAO/fluxo-dao")
 const suavidadeDao = require("../DAO/suavidade-dao")
@@ -107,24 +105,15 @@ async function inicializarTransacao() {
     return transacaoModel
 }
 
-router.get('/', async (req, res) => {
-    await sequelize.sync({force: true})
+module.exports = {
+    install: async function () {
+        await sequelize.sync({force: true})
 
-    const superAcesso = await inicializarSuperAcesso()
-    const fluxos = await inicializarFluxo()
-    const suavidades = await inicializarSuavidade()
-    const tamanhos = await inicializarTamanho()
-    const tiposAbsorventes = await inicializarTipoAbsorvente()
-    const transacoes = await inicializarTransacao()
-
-    res.json({
-        superAcesso: superAcesso, 
-        fluxos: fluxos,
-        suavidades: suavidades,
-        tamanhos: tamanhos,
-        tiposAbsorventes: tiposAbsorventes,
-        transacoes: transacoes
-    })
-})
-
-module.exports = router
+        const superAcesso = await inicializarSuperAcesso()
+        const fluxos = await inicializarFluxo()
+        const suavidades = await inicializarSuavidade()
+        const tamanhos = await inicializarTamanho()
+        const tiposAbsorventes = await inicializarTipoAbsorvente()
+        const transacoes = await inicializarTransacao()
+    }
+}

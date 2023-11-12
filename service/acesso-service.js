@@ -22,7 +22,6 @@ module.exports = {
         if (acesso) {
             return acesso.isAdmin
         }
-
         return false
     },
 

@@ -8,6 +8,10 @@ module.exports = {
         })
         return tamanhos
     },
+
+    listarTodos: async function() {
+        return await TamanhoModel.findAll()
+    },
     
     inserir: async function(codigo, valor) {
         const novoTamanho = await TamanhoModel.create({

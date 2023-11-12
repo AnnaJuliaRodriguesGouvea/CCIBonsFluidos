@@ -1,10 +1,12 @@
-import { useDadosProdutoContext } from "../../commom/context/dadosProduto"
 import { Box, Button, ButtonGroup, InputBase, Paper, Table, TableContainer } from "@mui/material";
 import { styled, alpha } from '@mui/material/styles';
 import { Link } from "react-router-dom";
 import DataTableProduto from "../../componentes/DataTableProduto";
 import { ArrowBackIos, ArrowForwardIos } from "@mui/icons-material";
-import { useEffect, useState } from "react";
+import {useContext, useEffect, useState} from "react";
+import {DadosParametrizacaoProvider} from "../../commom/context/dadosParametrizacao.jsx";
+import {AppContext} from "../../commom/context/appContext.jsx";
+import {getIsAdmin} from "../../service/acessoService.jsx";
 
 const LinkEstilizado = styled(Link)`
   text-decoration: none;
@@ -14,10 +16,18 @@ const LinkEstilizado = styled(Link)`
   }
 `
 
-const Produto = ({ selectMenuItems, isAdmin }) => {
-    const { rows, listaProdutos } = useDadosProdutoContext()
-
+const Produto = () => {
+    const appContext = useContext(AppContext)
+    const [isAdmin, setIsAdmin] = useState(false)
     const [page, setPage] = useState(1);
+
+    async function carregaIsAdmin() {
+        setIsAdmin(await getIsAdmin(appContext.setError))
+    }
+
+    useEffect(() => {
+        carregaIsAdmin()
+    }, [])
 
     const handlePreviousPage = () => {
         if (page > 1) {
@@ -26,30 +36,25 @@ const Produto = ({ selectMenuItems, isAdmin }) => {
     };
 
     const handleNextPage = () => {
-        //TODO - fazer verificacao do count se page nao é > que count/5
-        //TODO - validar se count retorna o total no banco ou total da consulta
+        //TODO - fazer verificacao do count se page nao é > que count/5 - Anna
+        //TODO - validar se count retorna o total no banco ou total da consulta - Anna
         setPage(page + 1);
     };
 
-    async function carregaListaDeProdutos(limit, page) {
-        return await listaProdutos(limit, page)
-    }
-
-    useEffect(() => {
-        carregaListaDeProdutos(5, page)
-    }, [page])
 
     return (
         <Box sx={{ height: '80%', width: '95%', mx: 'auto', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 3 }}>
-                <LinkEstilizado to='/AdicionaProduto'>
+                <LinkEstilizado to='/adicionaProduto'>
                     {isAdmin && <Button variant="contained"> Adicionar </Button>}
                 </LinkEstilizado>
             </Box>
-            {/*TODO - arrumar organização das colunas*/}
+            {/* TODO - arrumar organização das colunas - Lemersom*/}
             <TableContainer component={Paper}>
                 <Table sx={{ minWidth: 650 }}>
-                    <DataTableProduto rows={rows} selectMenuItems={selectMenuItems} isAdmin={isAdmin} page={page} />
+                    <DadosParametrizacaoProvider>
+                        <DataTableProduto page={page} />
+                    </DadosParametrizacaoProvider>
                 </Table>
             </TableContainer>
             <ButtonGroup

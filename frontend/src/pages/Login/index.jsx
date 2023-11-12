@@ -1,4 +1,4 @@
-import { useState } from "react"
+import {useContext, useState} from "react"
 import { useNavigate } from "react-router-dom"
 import axios from "axios"
 import ContainerForm from "../../componentes/ContainerForm"
@@ -7,16 +7,13 @@ import TituloPrincipal from "../../componentes/Titulo"
 import FormBT from "../../componentes/FormBT"
 import ContainerLinkCadastrar from "../../componentes/ContainerLinkCadastrar"
 import { Typography } from "@mui/material"
-import { useUserInfoContext } from "../../commom/context/dadosUsuario"
+import {AppContext} from "../../commom/context/appContext.jsx";
 
-//TODO - rodando /install no login ???
+// FEITO - TODO - rodando /install no login - Anna
 
-const Login = ({ setIsAdmin, setEntidade }) => {
+const Login = () => {
+    const appContext = useContext(AppContext)
     const navigate = useNavigate();
-    
-    const { setInfoPF, setInfoPJ } = useUserInfoContext()
-    setInfoPJ(null)
-    setInfoPF(null)
 
     const [formValues, setformValues] = useState({
         email: '',
@@ -29,16 +26,13 @@ const Login = ({ setIsAdmin, setEntidade }) => {
         e.preventDefault()
 
         try {
-            //TODO - colocar em then catch - Anna
             const { data } = await axios.post('http://localhost:3000/login', {
                 email: formValues.email,
                 senha: formValues.senha
             })
 
             localStorage.setItem("token", data.token)
-            localStorage.setItem("codigo", data.codigo)
-            setIsAdmin(data.isAdmin)
-            setEntidade(data.entidade)
+            // appContext.setIsAdmin(data.isAdmin)
             setErro(null);
             if (data.token)
                 navigate('/home')

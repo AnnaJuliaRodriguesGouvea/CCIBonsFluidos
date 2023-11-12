@@ -5,8 +5,8 @@ import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { useDadosDoacaoContext } from "../../commom/context/dadosDoacao"
 import ModalFeedbackEnvio from "../../componentes/ModalFeedbackEnvio"
-import { useDadosProdutoContext } from "../../commom/context/dadosProduto"
 import { useDadosPessoaJuridica } from "../../commom/context/dadosPessoaJuridica"
+import { listarProdutos } from "../../service/produtoService.jsx";
 
 const Div = styled.div`
     width: 100vw;
@@ -16,9 +16,8 @@ const Div = styled.div`
 `
 
 const AdicionaDoacao = ({ selectMenuItems }) => {
-
+    const [rows, setRows] = useState([])
     const { adicionarDoacao, erro, setErro } = useDadosDoacaoContext()
-    const { rows, listaProdutos } = useDadosProdutoContext()
     const { pessoasJuridicas, listaPessoasJuridicas } = useDadosPessoaJuridica()
 
     useEffect(() => {
@@ -28,7 +27,7 @@ const AdicionaDoacao = ({ selectMenuItems }) => {
     async function carregaListaDeProdutos(limit, page) {
         // FEITO - TODO - buscar produto a partir da string digitada pelo usuario:
         // EXE: produto Intimus, usuario digita imus e ele traz todos os produtos com substring imus - Lemersom (apenas o front)
-        return await listaProdutos(limit, page)
+        setRows(await listarProdutos(limit, page).rows)
     }
 
     async function carregaListaPessoasJuridicas(limit, page) {
@@ -46,7 +45,6 @@ const AdicionaDoacao = ({ selectMenuItems }) => {
         quantidade: '',
         codigo_transacao: '',
         codigo_produto: '',
-        codigo_acesso: parseInt(localStorage.getItem("codigo")),
         cnpj_destino: '',
     });
 

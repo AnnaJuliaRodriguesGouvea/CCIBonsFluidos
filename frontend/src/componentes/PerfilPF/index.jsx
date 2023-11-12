@@ -1,10 +1,11 @@
 import { Box, Button, Paper, Toolbar, Typography } from "@mui/material"
 import DadosPessoaFisica from "../DadosPessoaFisica"
-import { useState } from "react";
+import {useContext, useState} from "react";
 import CampoTexto from "../CampoTexto";
-import { useUserInfoContext } from "../../commom/context/dadosUsuario";
 import ModalFeedbackEnvio from "../ModalFeedbackEnvio"
 import { useNavigate } from "react-router-dom";
+import {AppContext} from "../../commom/context/appContext.jsx";
+import {alteraPF, deletePF} from "../../service/pessoaFisicaService.jsx";
 
 const formataData = (data) => {
     const dataObjeto = new Date(data);
@@ -18,8 +19,9 @@ const formataData = (data) => {
     return dataFormatada
 }
 
-const PerfilPF = ({ infoPF, isAdmin, setIsAdmin }) => {
-    const { alteraPF, deletePF, erro } = useUserInfoContext()
+const PerfilPF = () => {
+    const infoPF = {}
+    const appContext = useContext(AppContext)
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
@@ -32,7 +34,6 @@ const PerfilPF = ({ infoPF, isAdmin, setIsAdmin }) => {
     const handleDelete = async () => {
         await deletePF(infoPF?.pessoaFisica.codigo)
         localStorage.clear()
-        setIsAdmin(false)
         navigate('/');
     }
 
@@ -40,7 +41,8 @@ const PerfilPF = ({ infoPF, isAdmin, setIsAdmin }) => {
         email: infoPF?.acesso.email,
         senha: infoPF?.acesso.senha,
         cpf: infoPF?.pessoaFisica.cpf,
-        isAdmin: isAdmin,
+        // TODO - tirar o appContext e pegar do valor carregado da pagina - Anna
+        isAdmin: appContext.isAdmin,
         nomePF: infoPF?.pessoaFisica.nome,
         dataDeNascimento: formataData(infoPF?.pessoaFisica.dataNascimento),
         cnpj: '',
@@ -104,10 +106,10 @@ const PerfilPF = ({ infoPF, isAdmin, setIsAdmin }) => {
                     DataDeNascimento={formValues.dataDeNascimento}
                     handleChangeDataDeNascimento={handleChange}
                 />
-                {erro && <Typography variant="body2" sx={{ color: 'error.main', textAlign: 'center', fontWeight: 700 }}>{erro.message}</Typography>}
+                {appContext.error && <Typography variant="body2" sx={{ color: 'error.main', textAlign: 'center', fontWeight: 700 }}>{appContext.error.message}</Typography>}
                 <Box sx={{ width: '76%', display: 'flex', justifyContent: 'space-between' }}>
                     <Button type="submit" variant="contained">Alterar</Button>
-                    {!erro && <ModalFeedbackEnvio open={open} handleClose={handleClose} texto='Cadastro atualizado com sucesso!' />}
+                    {!appContext.error && <ModalFeedbackEnvio open={open} handleClose={handleClose} texto='Cadastro atualizado com sucesso!' />}
                     <Button variant="contained" sx={{
                         color: '#FFF',
                         backgroundColor: 'error.light',

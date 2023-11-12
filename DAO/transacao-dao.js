@@ -1,4 +1,5 @@
 const TransacaoModel = require("../model/Transacao.js")
+const TipoAbsorventeModel = require("../model/TipoAbsorvente");
 
 module.exports = {
     listar: async function(limite, pagina) {
@@ -7,6 +8,10 @@ module.exports = {
             offset: (pagina - 1) * limite
         })
         return transacoes
+    },
+
+    listarTodos: async function() {
+        return await TransacaoModel.findAll()
     },
     
     inserir: async function(codigo, valor) {

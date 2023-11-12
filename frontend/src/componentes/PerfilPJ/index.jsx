@@ -1,13 +1,15 @@
 import { Box, Button, Paper, Toolbar, Typography } from "@mui/material"
-import { useState } from "react";
+import {useContext, useState} from "react";
 import CampoTexto from "../CampoTexto";
-import { useUserInfoContext } from "../../commom/context/dadosUsuario";
 import ModalFeedbackEnvio from "../ModalFeedbackEnvio"
 import { useNavigate } from "react-router-dom";
 import DadosPessoaJuridica from "../DadosPessoaJuridica";
+import {AppContext} from "../../commom/context/appContext.jsx";
+import {alteraPJ, deletePJ} from "../../service/pessoaJuridicaService.jsx";
 
-const PerfilPJ = ({ infoPJ, isAdmin, setIsAdmin }) => {
-    const { alteraPJ, deletePJ, erro } = useUserInfoContext()
+const PerfilPJ = () => {
+    const infoPJ = {}
+    const appContext = useContext(AppContext)
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
@@ -20,7 +22,6 @@ const PerfilPJ = ({ infoPJ, isAdmin, setIsAdmin }) => {
     const handleDelete = async () => {
         await deletePJ(infoPJ?.pessoaJuridica.codigo)
         localStorage.clear()
-        setIsAdmin(false)
         navigate('/');
     }
 
@@ -28,7 +29,8 @@ const PerfilPJ = ({ infoPJ, isAdmin, setIsAdmin }) => {
         email: infoPJ?.acesso.email,
         senha: infoPJ?.acesso.senha,
         cpf: '',
-        isAdmin: isAdmin,
+        // TODO - tirar o appContext e pegar do valor carregado da pagina - Anna
+        isAdmin: appContext.isAdmin,
         nomePF: '',
         dataDeNascimento: '',
         cnpj: infoPJ.pessoaJuridica.cnpj,
@@ -90,10 +92,10 @@ const PerfilPJ = ({ infoPJ, isAdmin, setIsAdmin }) => {
                     razaoSocial={formValues.razaoSocial}
                     handleChangeRazaoSocial={handleChange}
                 />
-                {erro && <Typography variant="body2" sx={{ color: 'error.main', textAlign: 'center', fontWeight: 700 }}>{erro.message}</Typography>}
+                {appContext.error && <Typography variant="body2" sx={{ color: 'error.main', textAlign: 'center', fontWeight: 700 }}>{appContext.error.message}</Typography>}
                 <Box sx={{ width: '76%', display: 'flex', justifyContent: 'space-between' }}>
                     <Button type="submit" variant="contained">Alterar</Button>
-                    {!erro && <ModalFeedbackEnvio open={open} handleClose={handleClose} texto='Cadastro atualizado com sucesso!' />}
+                    {!appContext.error && <ModalFeedbackEnvio open={open} handleClose={handleClose} texto='Cadastro atualizado com sucesso!' />}
                     <Button variant="contained" sx={{
                         color: '#FFF',
                         backgroundColor: 'error.light',

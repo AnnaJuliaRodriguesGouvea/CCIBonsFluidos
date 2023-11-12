@@ -1,4 +1,5 @@
 const FluxoModel = require("../model/Fluxo.js")
+const SuavidadeModel = require("../model/Suavidade");
 
 module.exports = {
     listar: async function(limite, pagina) {
@@ -7,6 +8,10 @@ module.exports = {
             offset: (pagina - 1) * limite
         })
         return fluxos
+    },
+
+    listarTodos: async function() {
+        return await FluxoModel.findAll()
     },
     
     inserir: async function(codigo, valor) {

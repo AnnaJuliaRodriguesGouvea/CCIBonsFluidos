@@ -18,7 +18,7 @@ const ImgEstilizado = styled.img`
   box-sizing: border-box;
 `
 
-const SideMenu = ({ selectedIndex, handleListItemClick, setIsAdmin }) => {
+const SideMenu = ({ selectedIndex, handleListItemClick }) => {
   //FEITO - TODO - mudar a cor da barra lateral para enxergar a logo - Lemersom
   return (
     <Box
@@ -68,7 +68,7 @@ const SideMenu = ({ selectedIndex, handleListItemClick, setIsAdmin }) => {
             </ListItemButton>
           </LinkEstilizado>
           <Divider />
-          {/*TODO - verificar se so admin tem isso, se nao tiver fazer a validacao - Luis*/}
+          {/*TODO - verificar se so admin tem isso, se nao tiver fazer a validacao - Anna*/}
           <LinkEstilizado to="/cadastrar">
             <ListItemButton>
               <ListItemIcon>
@@ -81,7 +81,6 @@ const SideMenu = ({ selectedIndex, handleListItemClick, setIsAdmin }) => {
         <Divider />
         <LinkEstilizado to="/" onClick={() => {
           localStorage.clear()
-          setIsAdmin(false)
         }}>
           <ListItemButton>
             <ListItemIcon>

@@ -3,9 +3,8 @@ import SideMenu from "../../componentes/SideMenu";
 import { Link, Outlet, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import styled from "@emotion/styled";
-import { useUserInfoContext } from "../../commom/context/dadosUsuario";
 
-//TODO - recarregar as páginas está deletando as tabelas 
+// FEITO - TODO - recarregar as páginas está deletando as tabelas - Anna
 
 const LinkEstilizado = styled(Link)`
     text-decoration: none;
@@ -14,33 +13,22 @@ const LinkEstilizado = styled(Link)`
 
 const drawerWidth = 200;
 
-const MainPagePadrao = ({ selectedIndex, setSelectedIndex, aoClickarItemLista, entidade, setIsAdmin }) => {
-  const navigate = useNavigate();
-  const { getUserInfoPF, getUserInfoPJ, infoPF, setInfoPF, infoPJ, setInfoPJ } = useUserInfoContext();
-
-  //TODO - criar uma rota no backend para recuperar usuario - Anna
-  async function carregaInfoUsuario() {
-    if (entidade == "PessoaFisica")
-      await getUserInfoPF(localStorage.getItem("codigo"))
-    if (entidade == "PessoaJuridica")
-      await getUserInfoPJ(localStorage.getItem("codigo"))
-  }
+const MainPagePadrao = ({ selectedIndex, setSelectedIndex, aoClickarItemLista }) => {
 
   useEffect(() => {
     setSelectedIndex(-1)
-    carregaInfoUsuario()
   }, [])
 
   //TODO - fazer no back a verificacao de exclusao logica na rota de login - Anna
-  if (infoPJ?.acesso.isExcluido) {
-    localStorage.clear()
-    alert('Acesso negado!')
-    navigate('/')
-  } else if (infoPF?.acesso.isExcluido) {
-    localStorage.clear()
-    alert('Acesso negado!')
-    navigate('/')
-  }
+  // if (infoPJ?.acesso.isExcluido) {
+  //   localStorage.clear()
+  //   alert('Acesso negado!')
+  //   navigate('/')
+  // } else if (infoPF?.acesso.isExcluido) {
+  //   localStorage.clear()
+  //   alert('Acesso negado!')
+  //   navigate('/')
+  // }
 
   const [anchorEl, setAnchorEl] = useState(null);
 
@@ -52,9 +40,9 @@ const MainPagePadrao = ({ selectedIndex, setSelectedIndex, aoClickarItemLista, e
     setAnchorEl(null);
   };
 
-  //TODO - renomer para isOPEN - Anna
-  const open = Boolean(anchorEl);
-  const id = open ? 'simple-popover' : undefined;
+  // FEITO - TODO - renomer para isOpen - Anna
+  const isOpen = Boolean(anchorEl);
+  const id = isOpen ? 'simple-popover' : undefined;
 
   return (
     <Container sx={{
@@ -89,7 +77,7 @@ const MainPagePadrao = ({ selectedIndex, setSelectedIndex, aoClickarItemLista, e
           </Button>
           <Popover
             id={id}
-            open={open}
+            open={isOpen}
             anchorEl={anchorEl}
             onClose={handleClose}
             anchorOrigin={{
@@ -118,7 +106,7 @@ const MainPagePadrao = ({ selectedIndex, setSelectedIndex, aoClickarItemLista, e
           </Popover>
         </Toolbar>
       </AppBar>
-      <SideMenu selectedIndex={selectedIndex} handleListItemClick={aoClickarItemLista} setIsAdmin={setIsAdmin} />
+      <SideMenu selectedIndex={selectedIndex} handleListItemClick={aoClickarItemLista} />
       <Box
         component="main"
         sx={{

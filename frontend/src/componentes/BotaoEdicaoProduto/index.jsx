@@ -1,11 +1,46 @@
 import { Box, Button, TextField, Modal, Typography, FormControlLabel, Checkbox, FormControl, InputLabel, Select, MenuItem } from "@mui/material";
 import { ModeEdit } from "@mui/icons-material";
-import { useState } from "react";
-import { useDadosProdutoContext } from "../../commom/context/dadosProduto";
+import {useContext, useEffect, useState} from "react";
 import ModalFeedbackEnvio from "../ModalFeedbackEnvio";
+import {alteraProduto, listarProdutos} from "../../service/produtoService.jsx";
+import {AppContext} from "../../commom/context/appContext.jsx";
+import {DadosParametrizacao} from "../../commom/context/dadosParametrizacao.jsx";
+import {getFluxo, getSuavidade, getTamanho, getTiposAbsorvente} from "../../service/parametrizacaoService.jsx";
 
-const BotaoEdicaoProduto = ({ dadosProduto, selectMenuItems, page }) => {
-    const { alteraProduto } = useDadosProdutoContext()
+const BotaoEdicaoProduto = ({ dadosProduto, page }) => {
+    const appContext = useContext(AppContext)
+    const {
+        listaTiposAbsorventes, setListaTiposAbsorventes,
+        listaSuavidades, setListaSuavidades,
+        listaFluxos, setListaFluxos,
+        listaTamanhos, setListaTamanhos,
+    } = useContext(DadosParametrizacao)
+
+    const [listaProdutos, setListaProdutos] = useState([])
+
+    async function carregaDadosTipoAbsorvente(){
+        setListaTiposAbsorventes(await getTiposAbsorvente(appContext.setError))
+    }
+
+    async function carregaDadosSuavidade(){
+        setListaSuavidades(await getSuavidade(appContext.setError))
+    }
+
+    async function carregaDadosFluxo(){
+        setListaFluxos(await getFluxo(appContext.setError))
+    }
+
+    async function carregaDadosTamanho(){
+        setListaTamanhos(await getTamanho(appContext.setError))
+    }
+
+    useEffect(() => {
+        carregaDadosTipoAbsorvente()
+        carregaDadosSuavidade()
+        carregaDadosFluxo()
+        carregaDadosTamanho()
+    }, [])
+
 
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
@@ -40,9 +75,9 @@ const BotaoEdicaoProduto = ({ dadosProduto, selectMenuItems, page }) => {
         }
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        alteraProduto(formValues, dadosProduto.codigo, page)
+        await alteraProduto(formValues, dadosProduto.codigo, page)
     };
 
     const [openModal, setOpenModal] = useState(false);
@@ -174,7 +209,7 @@ const BotaoEdicaoProduto = ({ dadosProduto, selectMenuItems, page }) => {
                                 onChange={handleInputChange}
                             >
                                 <MenuItem value="" disabled>Selecione o tipo do absorvente</MenuItem>
-                                {selectMenuItems?.tiposAbsorventes.map(tipoAbsorvente => {
+                                {listaTiposAbsorventes?.map(tipoAbsorvente => {
                                     return <MenuItem value={tipoAbsorvente.codigo} key={tipoAbsorvente.codigo}>{tipoAbsorvente.valor}</MenuItem>
                                 })}
                             </Select>
@@ -190,7 +225,7 @@ const BotaoEdicaoProduto = ({ dadosProduto, selectMenuItems, page }) => {
                                 onChange={handleInputChange}
                             >
                                 <MenuItem value="" disabled>Selecione a suavidade</MenuItem>
-                                {selectMenuItems?.suavidades.map(suavidades => {
+                                {listaSuavidades?.map(suavidades => {
                                     return <MenuItem value={suavidades.codigo} key={suavidades.codigo}>{suavidades.valor}</MenuItem>
                                 })}
                             </Select>
@@ -206,7 +241,7 @@ const BotaoEdicaoProduto = ({ dadosProduto, selectMenuItems, page }) => {
                                 onChange={handleInputChange}
                             >
                                 <MenuItem value="" disabled>Selecione o fluxo</MenuItem>
-                                {selectMenuItems?.fluxos.map(fluxo => {
+                                {listaFluxos?.map(fluxo => {
                                     return <MenuItem value={fluxo.codigo} key={fluxo.codigo}>{fluxo.valor}</MenuItem>
                                 })}
                             </Select>
@@ -222,7 +257,7 @@ const BotaoEdicaoProduto = ({ dadosProduto, selectMenuItems, page }) => {
                                 onChange={handleInputChange}
                             >
                                 <MenuItem value="" disabled>Selecione o tamanho</MenuItem>
-                                {selectMenuItems?.tamanhos.map(tamanho => {
+                                {listaTamanhos?.map(tamanho => {
                                     return <MenuItem value={tamanho.codigo} key={tamanho.codigo}>{tamanho.valor}</MenuItem>
                                 })}
                             </Select>

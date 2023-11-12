@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react"
-import { useDadosProdutoContext } from "../../commom/context/dadosProduto"
 import { Box, Button, Divider, Modal, Typography } from "@mui/material";
+import { listaUmProduto } from "../../service/produtoService.jsx";
 
 
 const BotaoDadosProduto = ({ codigoProduto, selectMenuItems }) => {
-    const { listaUmProduto, produto } = useDadosProdutoContext()
+    const [ produto, setProduto ] = useState({})
 
     const carregaProduto = async (codigoProduto) => {
-        await listaUmProduto(codigoProduto)
+        setProduto(await listaUmProduto(codigoProduto))
     }
 
     useEffect(() => {

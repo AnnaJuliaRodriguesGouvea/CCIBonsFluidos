@@ -3,6 +3,9 @@ const ProdutoModel = require("../model/Produto.js")
 module.exports = {
     listar: async function(limite, pagina) {
         const produtos = await ProdutoModel.findAndCountAll({
+            where: {
+                isExcluido: false
+            },
             limit: limite,
             offset: (pagina - 1) * limite
         })

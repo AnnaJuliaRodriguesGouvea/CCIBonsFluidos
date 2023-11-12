@@ -8,6 +8,10 @@ module.exports = {
         })
         return suavidades
     },
+
+    listarTodos: async function() {
+        return await SuavidadeModel.findAll()
+    },
     
     inserir: async function(codigo, valor) {
         const novaSuavidade = await SuavidadeModel.create({

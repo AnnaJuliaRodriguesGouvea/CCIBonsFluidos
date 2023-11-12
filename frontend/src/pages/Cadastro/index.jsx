@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import {useContext, useEffect, useState} from "react"
 import styled from "styled-components"
 import ContainerForm from "../../componentes/ContainerForm"
 import DadosPessoaFisica from "../../componentes/DadosPessoaFisica"
@@ -11,6 +11,8 @@ import axios from "axios"
 import { Typography } from "@mui/material"
 import ModalFeedbackEnvio from "../../componentes/ModalFeedbackEnvio"
 import { formataData } from "../../utils/formataData"
+import {AppContext} from "../../commom/context/appContext.jsx";
+import {getIsAdmin} from "../../service/acessoService.jsx";
 
 const DivOpcoes = styled.div`
     width: 75%;
@@ -26,12 +28,23 @@ const DivRadioButtons = styled.div`
     gap: 10px;
 `
 
-const Cadastro = ({ isAdmin }) => {
+const Cadastro = () => {
+    const appContext = useContext(AppContext)
+    const [isAdmin, setIsAdmin] = useState(false)
 
     const [entidade, setEntidade] = useState('pf');
     const [erro, setErro] = useState();
 
     const [open, setOpen] = useState(false);
+
+    async function carregaIsAdmin() {
+        setIsAdmin(await getIsAdmin(appContext.setError))
+    }
+
+    useEffect(() => {
+        carregaIsAdmin()
+    }, [])
+
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
 
@@ -205,7 +218,9 @@ const Cadastro = ({ isAdmin }) => {
                     />}
                 {erro && <Typography variant="body2" sx={{ color: 'error.main', textAlign: 'center', fontWeight: 700 }}>{erro.message}</Typography>}
                 <FormBT>Cadastrar</FormBT>
-                {/*FEITO - TODO - Após exibir o modal depois de 5seg voltar para pagina anterior de adicionar ou alterar - Lemersom*/}
+                {/* TODO - Após exibir o modal depois de 5seg voltar para pagina anterior de adicionar ou alterar - Lemersom
+                    Fazer em todos os componentes que tem modal
+                */}
                 {!erro && <ModalFeedbackEnvio open={open} handleClose={handleClose} texto='Cadastro realizado com sucesso!' />}
             </ContainerForm>
         </>
