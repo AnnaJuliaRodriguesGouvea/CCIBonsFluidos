@@ -1,6 +1,6 @@
 import styled from "@emotion/styled"
 import { ArrowBack } from "@mui/icons-material"
-import { Box, Button, Container, CssBaseline, FormControl, FormControlLabel, Grid, IconButton, InputLabel, MenuItem, Paper, Select, TextField, Typography } from "@mui/material"
+import { Autocomplete, Box, Button, Container, CssBaseline, FormControl, FormControlLabel, Grid, IconButton, InputLabel, MenuItem, Paper, Select, TextField, Typography } from "@mui/material"
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { useDadosDoacaoContext } from "../../commom/context/dadosDoacao"
@@ -26,7 +26,7 @@ const AdicionaDoacao = ({ selectMenuItems }) => {
     }, [])
 
     async function carregaListaDeProdutos(limit, page) {
-        //TODO - buscar produto a partir da string digitada pelo usuario:
+        // FEITO - TODO - buscar produto a partir da string digitada pelo usuario:
         // EXE: produto Intimus, usuario digita imus e ele traz todos os produtos com substring imus - Lemersom (apenas o front)
         return await listaProdutos(limit, page)
     }
@@ -179,37 +179,54 @@ const AdicionaDoacao = ({ selectMenuItems }) => {
                                 </Select>
                             </FormControl>
                             <FormControl required>
-                                <InputLabel id="label-Produto">Produto</InputLabel>
-                                <Select
-                                    labelId="label-Produto"
-                                    id="select-Produto"
+                                <Autocomplete
+                                    id="autocomplete-Produto"
                                     name="codigo_produto"
-                                    label="Produto"
-                                    value={formValues.codigo_produto}
-                                    onChange={handleInputChange}
-                                >
-                                    <MenuItem value="" disabled>Selecione um produto</MenuItem>
-                                    {
-                                        rows ? rows.map(produto => <MenuItem value={produto.codigo} key={produto.codigo}>{produto.nome}</MenuItem>) : <MenuItem value="" key="" disabled>Não há produtos cadastrados</MenuItem>
-
-                                    }
-                                </Select>
+                                    options={rows || []}
+                                    getOptionLabel={(produto) => produto.nome}
+                                    value={formValues.codigo_produto ? rows.find((produto) => produto.codigo === formValues.codigo_produto) || null : null}
+                                    onChange={(event, newValue) => {
+                                        handleInputChange({
+                                            target: {
+                                                name: "codigo_produto",
+                                                value: newValue ? newValue.codigo : "",
+                                            },
+                                        });
+                                    }}
+                                    renderInput={(params) => (
+                                        <TextField
+                                            {...params}
+                                            label="Produto"
+                                            required
+                                        />
+                                    )}
+                                    noOptionsText="Nenhum produto encontrado"
+                                />
                             </FormControl>
                             <FormControl required>
-                                <InputLabel id="label-CNPJ_Destino">Instituição</InputLabel>
-                                <Select
-                                    labelId="label-CNPJ_Destino"
-                                    id="select-CNPJ_Destino"
+                                <Autocomplete
+                                    id="autocomplete-CNPJ_Destino"
                                     name="cnpj_destino"
-                                    label="Instituição"
-                                    value={formValues.cnpj_destino}
-                                    onChange={handleInputChange}
-                                >
-                                    <MenuItem value="" disabled>Selecione uma Instituição</MenuItem>
-                                    {
-                                        pessoasJuridicas ? pessoasJuridicas.map(pj => <MenuItem value={pj.codigo} key={pj.codigo}>{String(pj.razaoSocial)}</MenuItem>) : <MenuItem value="" key="" disabled>Não há pessoas juridicas cadastradas</MenuItem>
-                                    }
-                                </Select>
+                                    options={pessoasJuridicas || []}
+                                    getOptionLabel={(pj) => String(pj.razaoSocial)}
+                                    value={formValues.cnpj_destino ? pessoasJuridicas.find((pj) => pj.codigo === formValues.cnpj_destino) || null : null}
+                                    onChange={(event, newValue) => {
+                                        handleInputChange({
+                                            target: {
+                                                name: "cnpj_destino",
+                                                value: newValue ? newValue.codigo : "",
+                                            },
+                                        });
+                                    }}
+                                    renderInput={(params) => (
+                                        <TextField
+                                            {...params}
+                                            label="Instituição"
+                                            required
+                                        />
+                                    )}
+                                    noOptionsText="Nenhuma instituição encontrada"
+                                />
                             </FormControl>
                             {erro && <Typography variant="body2" sx={{ color: 'error.main', textAlign: 'center', fontWeight: 700 }}>Todos os campos devem ser preenchidos corretamente!</Typography>}
                             <Button type="submit" variant="contained" color="secondary">
