@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import styled from "styled-components"
 import ContainerForm from "../../componentes/ContainerForm"
 import DadosPessoaFisica from "../../componentes/DadosPessoaFisica"
@@ -133,6 +133,16 @@ const Cadastro = ({ isAdmin }) => {
         }
     };
 
+    useEffect(() => {
+        let timer;
+        if (open) {
+          timer = setTimeout(() => {
+            handleClose();
+          }, 1750);
+        }
+        return () => clearTimeout(timer);
+    }, [open]);
+
     return (
         <>
             <ContainerForm $altura='820px' $largura='100%' botaoVoltar={true} handleSubmit={handleSubmit}>
@@ -195,7 +205,7 @@ const Cadastro = ({ isAdmin }) => {
                     />}
                 {erro && <Typography variant="body2" sx={{ color: 'error.main', textAlign: 'center', fontWeight: 700 }}>{erro.message}</Typography>}
                 <FormBT>Cadastrar</FormBT>
-                {/*TODO - Após exibir o modal depois de 5seg voltar para pagina anterior de adicionar ou alterar - Lemersom*/}
+                {/*FEITO - TODO - Após exibir o modal depois de 5seg voltar para pagina anterior de adicionar ou alterar - Lemersom*/}
                 {!erro && <ModalFeedbackEnvio open={open} handleClose={handleClose} texto='Cadastro realizado com sucesso!' />}
             </ContainerForm>
         </>

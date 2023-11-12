@@ -12,7 +12,11 @@ const DataTableDoacao = ({ doacoes, selectMenuItems }) => {
     }
 
     useEffect(() => {
-        carregaListaPessoasJuridicas(30, 1)
+        const fetchData = async () => {
+            await carregaListaPessoasJuridicas(30, 1)
+        }
+
+        fetchData()
     }, [])
 
     return (
@@ -23,7 +27,7 @@ const DataTableDoacao = ({ doacoes, selectMenuItems }) => {
                     <TableCell align="right">Quantidade</TableCell>
                     <TableCell align="right">Transação</TableCell>
                     <TableCell align="right">Produto</TableCell>
-                    <TableCell align="right">CNPJ de Destino</TableCell>
+                    <TableCell align="right">Instituição</TableCell>
                 </TableRow>
             </TableHead>
             <TableBody>
@@ -42,15 +46,19 @@ const DataTableDoacao = ({ doacoes, selectMenuItems }) => {
                                 <BotaoDadoProduto codigoProduto={row.codigo_produto} selectMenuItems={selectMenuItems} />
                             </TableCell>
                             <TableCell align="right">
-                                {pessoasJuridicas ? pessoasJuridicas.map(pj =>
-                                    String(pj.cnpj))
+                                {/* FEITO - TODO - está pegando todas as pessoas juridicas ao invez da relacionada a tabela*/}
+                                {pessoasJuridicas ? 
+                                    pessoasJuridicas
+                                        .filter(pj => pj.codigo === row.cnpj_destino)
+                                        .map(pj => String(pj.razaoSocial))
                                     :
-                                    'Não há pessoas juridicas cadastradas'}
+                                    'Não há pessoas jurídicas cadastradas'
+                                }
                             </TableCell>
                         </TableRow>
                     )) : <TableRow>
                         <TableCell colSpan={11}>
-                            <Typography variant="body2" sx={{ color: 'info.main', textAlign: 'center' }}>Não há produtos cadastrados nesta página</Typography>
+                            <Typography variant="body2" sx={{ color: 'info.main', textAlign: 'center' }}>Não há doações cadastradas nesta página</Typography>
                         </TableCell>
                     </TableRow>
                 }

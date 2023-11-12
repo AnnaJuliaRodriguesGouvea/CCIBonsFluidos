@@ -7,7 +7,7 @@ const drawerWidth = 200;
 
 const LinkEstilizado = styled(Link)`
   text-decoration: none;
-  color: rgba(0, 0, 0, 0.7);
+  color: #e01f4c;
   &:visited {
     color: rgba(0, 0, 0, 0.7);
   }
@@ -19,7 +19,7 @@ const ImgEstilizado = styled.img`
 `
 
 const SideMenu = ({ selectedIndex, handleListItemClick, setIsAdmin }) => {
-  //TODO - mudar a cor da barra lateral para enxergar a logo - Lemersom
+  //FEITO - TODO - mudar a cor da barra lateral para enxergar a logo - Lemersom
   return (
     <Box
       component="nav"
@@ -30,7 +30,11 @@ const SideMenu = ({ selectedIndex, handleListItemClick, setIsAdmin }) => {
       <Drawer
         variant="permanent"
         sx={{
-          '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
+          '& .MuiDrawer-paper': { 
+            boxSizing: 'border-box', 
+            width: drawerWidth, 
+            bgcolor: '#C0C0C0' 
+          },
         }}
       >
         <Toolbar sx={{ display: 'flex', justifyContent: 'center', p: 0 }}>
@@ -44,7 +48,7 @@ const SideMenu = ({ selectedIndex, handleListItemClick, setIsAdmin }) => {
               onClick={() => handleListItemClick(0)}
             >
               <ListItemIcon>
-                <AddBox />
+                <AddBox style={{color: '#e01f4c'}}/>
               </ListItemIcon>
               <ListItemText
                 primary="Produto"
@@ -58,7 +62,7 @@ const SideMenu = ({ selectedIndex, handleListItemClick, setIsAdmin }) => {
               onClick={() => handleListItemClick(1)}
             >
               <ListItemIcon>
-                <VolunteerActivism />
+                <VolunteerActivism style={{color: '#e01f4c'}}/>
               </ListItemIcon>
               <ListItemText primary="Doação" sx={{ py: 1 }} />
             </ListItemButton>
@@ -68,7 +72,7 @@ const SideMenu = ({ selectedIndex, handleListItemClick, setIsAdmin }) => {
           <LinkEstilizado to="/cadastrar">
             <ListItemButton>
               <ListItemIcon>
-                <AccountCircle />
+                <AccountCircle style={{color: '#e01f4c'}}/>
               </ListItemIcon>
               <ListItemText primary="Cadastrar" sx={{ py: 2 }} />
             </ListItemButton>
@@ -81,9 +85,9 @@ const SideMenu = ({ selectedIndex, handleListItemClick, setIsAdmin }) => {
         }}>
           <ListItemButton>
             <ListItemIcon>
-              <Logout />
+              <Logout style={{color: '#e01f4c'}}/>
             </ListItemIcon>
-            <ListItemText primary="Sair" sx={{ color: 'rgba(0, 0, 0, 0.7)', p: 2 }} />
+            <ListItemText primary="Sair" sx={{ color: '#e01f4c', p: 2 }} />
           </ListItemButton>
         </LinkEstilizado >
       </Drawer>

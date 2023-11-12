@@ -49,15 +49,18 @@ const DataTableProduto = ({ rows, selectMenuItems, isAdmin, page }) => {
                             <TableCell align="right">{row.temEscapeUrina ? "Sim" : "Não"}</TableCell>
                             <TableCell align="center">{row.quantidadeNoPacote}</TableCell>
                             <TableCell align="center">{row.quantidadeDePacote}</TableCell>
+                            {/* TODO - se exemplo.valor não existir quebra o código */}
                             <TableCell align="right">{selectMenuItems?.tiposAbsorventes.find(opcao => opcao.codigo === row.codigo_tipo_absorvente).valor}</TableCell>
                             <TableCell align="right">{selectMenuItems?.suavidades.find(opcao => opcao.codigo === row.codigo_suavidade).valor}</TableCell>
                             <TableCell align="right">{selectMenuItems?.transacoes.find(opcao => opcao.codigo === row.codigo_fluxo).valor}</TableCell>
                             <TableCell align="right">{selectMenuItems?.tamanhos.find(opcao => opcao.codigo === row.codigo_tamanho).valor}</TableCell>
-                            {/*TODO - arrumar o espaçamento dos botoes editar e excluir - Lemersom*/}
-                            {isAdmin && <TableCell align="right">
+                            {/* FEITO - TODO - arrumar o espaçamento dos botoes editar e excluir - Lemersom*/}
+                            {isAdmin && <TableCell align="right" sx={{pr: 1}}>
                                 <BotaoEdicaoProduto dadosProduto={row} selectMenuItems={selectMenuItems} page={page} />
                             </TableCell>}
-                            {isAdmin && <TableCell align="right">
+
+                            {/*TODO - deletando direto ao clicar no botão, sem popup */}
+                            {isAdmin && <TableCell align="left" sx={{pl: 1}}>
                                 <Button
                                     variant="outlined"
                                     sx={{

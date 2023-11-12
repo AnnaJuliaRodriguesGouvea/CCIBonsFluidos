@@ -32,7 +32,7 @@ const AdicionaDoacao = ({ selectMenuItems }) => {
     }
 
     async function carregaListaPessoasJuridicas(limit, page) {
-        //TODO - Arrumar para ao inves de usar cnpj usar nome fantasia e fazer o mesmo comportamento de produtos - Lemersom
+        // FEITO - TODO - Arrumar para ao inves de usar cnpj usar nome fantasia e fazer o mesmo comportamento de produtos - Lemersom
         return await listaPessoasJuridicas(limit, page)
     }
 
@@ -86,6 +86,16 @@ const AdicionaDoacao = ({ selectMenuItems }) => {
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
+
+    useEffect(() => {
+        let timer;
+        if (open) {
+          timer = setTimeout(() => {
+            handleClose();
+          }, 1750);
+        }
+        return () => clearTimeout(timer); 
+    }, [open]);
 
     return (
         <Div>
@@ -186,18 +196,18 @@ const AdicionaDoacao = ({ selectMenuItems }) => {
                                 </Select>
                             </FormControl>
                             <FormControl required>
-                                <InputLabel id="label-CNPJ_Destino">CNPJ de Destino</InputLabel>
+                                <InputLabel id="label-CNPJ_Destino">Instituição</InputLabel>
                                 <Select
                                     labelId="label-CNPJ_Destino"
                                     id="select-CNPJ_Destino"
                                     name="cnpj_destino"
-                                    label="CNPJ de Destino"
+                                    label="Instituição"
                                     value={formValues.cnpj_destino}
                                     onChange={handleInputChange}
                                 >
-                                    <MenuItem value="" disabled>Selecione um CNPJ</MenuItem>
+                                    <MenuItem value="" disabled>Selecione uma Instituição</MenuItem>
                                     {
-                                        pessoasJuridicas ? pessoasJuridicas.map(pj => <MenuItem value={pj.codigo} key={pj.codigo}>{String(pj.cnpj)}</MenuItem>) : <MenuItem value="" key="" disabled>Não há pessoas juridicas cadastradas</MenuItem>
+                                        pessoasJuridicas ? pessoasJuridicas.map(pj => <MenuItem value={pj.codigo} key={pj.codigo}>{String(pj.razaoSocial)}</MenuItem>) : <MenuItem value="" key="" disabled>Não há pessoas juridicas cadastradas</MenuItem>
                                     }
                                 </Select>
                             </FormControl>

@@ -9,6 +9,8 @@ import ContainerLinkCadastrar from "../../componentes/ContainerLinkCadastrar"
 import { Typography } from "@mui/material"
 import { useUserInfoContext } from "../../commom/context/dadosUsuario"
 
+//TODO - rodando /install no login ???
+
 const Login = ({ setIsAdmin, setEntidade }) => {
     const navigate = useNavigate();
     

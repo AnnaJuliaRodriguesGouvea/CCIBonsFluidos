@@ -69,6 +69,16 @@ const AdicionaProduto = ({ selectMenuItems }) => {
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
 
+    useEffect(() => {
+        let timer;
+        if (open) {
+          timer = setTimeout(() => {
+            handleClose();
+          }, 1750);
+        }
+        return () => clearTimeout(timer); 
+    }, [open]);
+
     return (
         <Div>
             {/*TODO - arrumar o box que nao preenche tudo - Luis*/}
