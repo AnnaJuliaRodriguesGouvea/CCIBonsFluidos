@@ -1,7 +1,6 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom"
 import { useEffect, useState } from 'react'
 
-import { DadosDoacaoProvider } from './commom/context/dadosDoacao.jsx'
 import { DadosPessoaJuridicaProvider } from "./commom/context/dadosPessoaJuridica.jsx"
 
 import EstilosGlobais from "./componentes/EstilosGlobais"
@@ -33,29 +32,26 @@ function AppRoutes() {
       <BrowserRouter>
         <EstilosGlobais />
         <AppContextProvider>
-          <DadosDoacaoProvider>
-            <DadosPessoaJuridicaProvider>
-              <Routes>
-                <Route path="/" element={<MainContainer />}>
-                  <Route index element={<Login/>} />
-                  <Route path="cadastrar" element={<Cadastro/>} />
-                </Route>
-                <Route path='/home' element={<MainPagePadrao selectedIndex={selectedIndex} setSelectedIndex={setSelectedIndex} aoClickarItemLista={handleListItemClick}/>}>
-                  {/* FEITO - TODO - recuperar valores de parametrizacao pela rota correta - Anna*/}
-                  <Route path='/home/produto' element={<Produto/>}/>
-                  <Route path='/home/doacao' element={<Doacao selectMenuItems={data} />} />
-                  <Route path='/home/perfil' element={<Perfil />} />
-                </Route>
-                <Route path='/adicionaProduto' element={
-                  <DadosParametrizacaoProvider>
-                    <AdicionaProduto/>
-                  </DadosParametrizacaoProvider>
-                } />
-                <Route path='/AdicionaDoacao' element={<AdicionaDoacao selectMenuItems={data} />} />
-                <Route path="*" element={<Alert severity="error">Error 404: Page not found</Alert>} />
-              </Routes>
-            </ DadosPessoaJuridicaProvider>
-          </DadosDoacaoProvider>
+          <DadosPessoaJuridicaProvider>
+            <Routes>
+              <Route path="/" element={<MainContainer />}>
+                <Route index element={<Login/>} />
+                <Route path="cadastrar" element={<Cadastro/>} />
+              </Route>
+              <Route path='/home' element={<MainPagePadrao selectedIndex={selectedIndex} setSelectedIndex={setSelectedIndex} aoClickarItemLista={handleListItemClick}/>}>
+                <Route path='/home/produto' element={<Produto/>}/>
+                <Route path='/home/doacao' element={<Doacao/>} />
+                <Route path='/home/perfil' element={<Perfil />} />
+              </Route>
+              <Route path='/adicionaProduto' element={
+                <DadosParametrizacaoProvider>
+                  <AdicionaProduto/>
+                </DadosParametrizacaoProvider>
+              } />
+              <Route path='/AdicionaDoacao' element={<AdicionaDoacao selectMenuItems={data} />} />
+              <Route path="*" element={<Alert severity="error">Error 404: Page not found</Alert>} />
+            </Routes>
+          </ DadosPessoaJuridicaProvider>
         </AppContextProvider>
       </BrowserRouter >
     </>

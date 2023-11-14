@@ -63,7 +63,6 @@ module.exports = {
     atualizarPessoaFisica: async function(codigoLogado, codigo, email, senha, isAdmin, cpf, nome, dataNascimento) {
         const acessoResponse = await acessoService.atualizarAcesso(codigoLogado, codigo, email, senha, isAdmin)
         if(acessoResponse.status === 200) {
-            console.log("Entrei")
             if(await acessoService.isAdmin(codigoLogado) || codigoLogado === codigo) {
                 const [response] = await atualizarDadosPessoaFisica(codigo, cpf, nome, dataNascimento)
                 return {status: 200, data: response}

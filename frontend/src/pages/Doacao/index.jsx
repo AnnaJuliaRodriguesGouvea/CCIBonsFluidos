@@ -4,7 +4,10 @@ import { Box, Button, ButtonGroup, InputBase, Paper, Table, TableContainer } fro
 import { styled, alpha } from '@mui/material/styles';
 import { Link } from "react-router-dom";
 import { ArrowBackIos, ArrowForwardIos } from "@mui/icons-material";
-import { useEffect, useState } from "react";
+import {useContext, useEffect, useState} from "react";
+import {listarDoacoes} from "../../service/doacaoService.js";
+import {AppContext} from "../../commom/context/appContext.jsx";
+import {DadosParametrizacaoProvider} from "../../commom/context/dadosParametrizacao.jsx";
 
 const LinkEstilizado = styled(Link)`
   text-decoration: none;
@@ -14,28 +17,7 @@ const LinkEstilizado = styled(Link)`
   }
 `
 
-const Doacao = ({ selectMenuItems }) => {
-    const { rows, listaDoacoes } = useDadosDoacaoContext()
-
-    const [page, setPage] = useState(1);
-
-    const handlePreviousPage = () => {
-        if (page > 1) {
-            setPage(page - 1);
-        }
-    };
-
-    const handleNextPage = () => {
-        setPage(page + 1);
-    };
-
-    async function carregaListaDeDoacoes(page) {
-        return await listaDoacoes(page)
-    }
-
-    useEffect(() => {
-        carregaListaDeDoacoes(page)
-    }, [])
+const Doacao = () => {
 
     return (
         <Box sx={{ height: '80%', width: '70%', mx: 'auto', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
@@ -48,54 +30,9 @@ const Doacao = ({ selectMenuItems }) => {
                     </Button>
                 </LinkEstilizado>
             </Box>
-            <TableContainer component={Paper}>
-                <Table sx={{ minWidth: 650 }}>
-                    <DataTableDoacao doacoes={rows} selectMenuItems={selectMenuItems} />
-                </Table>
-            </TableContainer>
-            <ButtonGroup
-                disableElevation
-                variant="contained"
-                aria-label="Disabled elevation buttons"
-                sx={{
-                    mt: 2,
-                    mx: 'auto',
-                    borderColor: '#000',
-                }}
-            >
-                <Button sx={{
-                    borderRadius: '0 0 0 5px',
-                    px: 3,
-                    py: 1.5,
-                    backgroundColor: '#fff',
-                    color: '#1f1f1f',
-                    border: '1px solid #242424',
-                    '&:hover': {
-                        backgroundColor: '#e0e0e0',
-                    },
-                    '&.MuiButtonGroup-firstButton': {
-                        borderColor: '#242424'
-                    },
-                }} onClick={handlePreviousPage}>
-                    <ArrowBackIos />
-                </Button>
-                <Button sx={{
-                    borderRadius: '0 0 5px 0',
-                    p: 3,
-                    py: 1.5,
-                    backgroundColor: '#fff',
-                    color: '#1f1f1f',
-                    border: '1px solid #242424',
-                    '&:hover': {
-                        backgroundColor: '#e0e0e0',
-                    },
-                    '&.MuiButtonGroup-firstButton': {
-                        borderColor: '#242424'
-                    },
-                }} onClick={handleNextPage}>
-                    <ArrowForwardIos />
-                </Button>
-            </ButtonGroup>
+            <DadosParametrizacaoProvider>
+                <DataTableDoacao/>
+            </DadosParametrizacaoProvider>
         </Box>
     )
 }

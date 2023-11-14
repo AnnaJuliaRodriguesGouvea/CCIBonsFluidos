@@ -7,7 +7,7 @@ import {AppContext} from "../../commom/context/appContext.jsx";
 import {DadosParametrizacao} from "../../commom/context/dadosParametrizacao.jsx";
 import {getFluxo, getSuavidade, getTamanho, getTiposAbsorvente} from "../../service/parametrizacaoService.jsx";
 
-const BotaoEdicaoProduto = ({ dadosProduto, page }) => {
+const ModalEdicaoProduto = ({ dadosProduto, visible, closeModal }) => {
     const appContext = useContext(AppContext)
     const {
         listaTiposAbsorventes, setListaTiposAbsorventes,
@@ -16,7 +16,7 @@ const BotaoEdicaoProduto = ({ dadosProduto, page }) => {
         listaTamanhos, setListaTamanhos,
     } = useContext(DadosParametrizacao)
 
-    const [listaProdutos, setListaProdutos] = useState([])
+    const [textModal, setTextModal] = useState("")
 
     async function carregaDadosTipoAbsorvente(){
         setListaTiposAbsorventes(await getTiposAbsorvente(appContext.setError))
@@ -34,6 +34,35 @@ const BotaoEdicaoProduto = ({ dadosProduto, page }) => {
         setListaTamanhos(await getTamanho(appContext.setError))
     }
 
+    const [openModalAlert, setOpenModalAlert] = useState(false);
+    const handleOpenModalAlert = () => setOpenModalAlert(true);
+    const handleCloseModalAlert = () => setOpenModalAlert(false);
+
+    useEffect(() => {
+        let timer;
+        if (openModalAlert) {
+            timer = setTimeout(() => {
+                handleCloseModalAlert();
+                closeModal();
+            }, 1750);
+        }
+        return () => clearTimeout(timer);
+    }, [openModalAlert]);
+
+    const [formValues, setFormValues] = useState({
+        marca: "",
+        nome: "",
+        temAba: false,
+        ehNoturno: false,
+        temEscapeDeUrina: false,
+        quantidadeNoPacote: "",
+        quantidadeDePacote: "",
+        tipoDeAbsorvente: "",
+        suavidade: "",
+        fluxo: "",
+        tamanho: "",
+    });
+
     useEffect(() => {
         carregaDadosTipoAbsorvente()
         carregaDadosSuavidade()
@@ -41,24 +70,21 @@ const BotaoEdicaoProduto = ({ dadosProduto, page }) => {
         carregaDadosTamanho()
     }, [])
 
-
-    const [open, setOpen] = useState(false);
-    const handleOpen = () => setOpen(true);
-    const handleClose = () => setOpen(false);
-
-    const [formValues, setFormValues] = useState({
-        marca: dadosProduto.marca,
-        nome: dadosProduto.nome,
-        temAba: dadosProduto.temAbas,
-        ehNoturno: dadosProduto.isNoturno,
-        temEscapeDeUrina: dadosProduto.temEscapeUrina,
-        quantidadeNoPacote: dadosProduto.quantidadeNoPacote,
-        quantidadeDePacote: dadosProduto.quantidadeDePacote,
-        tipoDeAbsorvente: dadosProduto.codigo_tipo_absorvente,
-        suavidade: dadosProduto.codigo_suavidade,
-        fluxo: dadosProduto.codigo_fluxo,
-        tamanho: dadosProduto.codigo_tamanho,
-    });
+    useEffect(() => {
+        setFormValues({
+            marca: dadosProduto.marca,
+            nome: dadosProduto.nome,
+            temAba: dadosProduto.temAbas,
+            ehNoturno: dadosProduto.isNoturno,
+            temEscapeDeUrina: dadosProduto.temEscapeUrina,
+            quantidadeNoPacote: dadosProduto.quantidadeNoPacote,
+            quantidadeDePacote: dadosProduto.quantidadeDePacote,
+            tipoDeAbsorvente: dadosProduto.codigo_tipo_absorvente,
+            suavidade: dadosProduto.codigo_suavidade,
+            fluxo: dadosProduto.codigo_fluxo,
+            tamanho: dadosProduto.codigo_tamanho,
+    })
+    }, [dadosProduto])
 
     const handleInputChange = (e) => {
         const { name, value, type, checked } = e.target;
@@ -77,24 +103,22 @@ const BotaoEdicaoProduto = ({ dadosProduto, page }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        await alteraProduto(formValues, dadosProduto.codigo, page)
+        const result = await alteraProduto(formValues, dadosProduto.codigo, appContext.setError)
+        if (result.status == 200) {
+            //chama modal
+            setTextModal('Produto alterado com sucesso!')
+        } else {
+            //chama modal com erro
+            setTextModal('Erro ao alterar produto!')
+        }
+        handleOpenModalAlert()
     };
-
-    const [openModal, setOpenModal] = useState(false);
-    const handleOpenModal = () => setOpenModal(true);
-    const handleCloseModal = () => setOpenModal(false);
 
     return (
         <>
-            <Button
-                variant="outlined"
-                onClick={handleOpenModal}
-            >
-                <ModeEdit />
-            </Button>
             <Modal
-                open={openModal}
-                onClose={handleCloseModal}
+                open={visible}
+                onClose={closeModal}
             >
                 <Box
                     sx={{
@@ -262,10 +286,10 @@ const BotaoEdicaoProduto = ({ dadosProduto, page }) => {
                                 })}
                             </Select>
                         </FormControl>
-                        <Button type="submit" variant="contained" color="secondary" onClick={(handleOpen)}>
+                        <Button type="submit" variant="contained" color="secondary">
                             Enviar
                         </Button>
-                        <ModalFeedbackEnvio open={open} handleClose={handleClose} texto='Produto alterado com sucesso!' />
+                        <ModalFeedbackEnvio open={openModalAlert} handleClose={handleCloseModalAlert} texto={textModal} />
                     </Box>
                 </Box>
             </Modal >
@@ -273,4 +297,4 @@ const BotaoEdicaoProduto = ({ dadosProduto, page }) => {
     )
 }
 
-export default BotaoEdicaoProduto
+export default ModalEdicaoProduto

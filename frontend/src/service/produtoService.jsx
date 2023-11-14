@@ -55,7 +55,7 @@ export async function listaUmProduto(codigoDoProduto, setError) {
 
 export async function alteraProduto(produto, codigoDoProduto, setError) {
     try {
-        await axios.put(`http://localhost:3000/api/product/${codigoDoProduto}`, {
+        const result = await axios.put(`http://localhost:3000/api/product/${codigoDoProduto}`, {
             marca: produto.marca,
             nome: produto.nome,
             temAbas: produto.temAba,
@@ -73,6 +73,7 @@ export async function alteraProduto(produto, codigoDoProduto, setError) {
             }
         })
         setError(null)
+        return result
     } catch (err) {
         setError(err);
     }
@@ -80,12 +81,13 @@ export async function alteraProduto(produto, codigoDoProduto, setError) {
 
 export async function deletaProduto(codigoDoProduto, setError) {
     try {
-        await axios.delete(`http://localhost:3000/api/product/${codigoDoProduto}`, {
+        const result = await axios.delete(`http://localhost:3000/api/product/${codigoDoProduto}`, {
             headers: {
                 'Authorization': `Bearer ${localStorage.getItem("token")}`,
             }
         })
         setError(null)
+        return result
     } catch (err) {
         setError(err)
     }

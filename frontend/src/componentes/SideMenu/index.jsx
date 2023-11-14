@@ -2,6 +2,9 @@ import { AccountCircle, AddBox, Logout, VolunteerActivism } from "@mui/icons-mat
 import { Box, Divider, Drawer, List, ListItemButton, ListItemIcon, ListItemText, Toolbar } from "@mui/material"
 import { Link } from "react-router-dom";
 import styled from "@emotion/styled";
+import {useContext, useEffect, useState} from "react";
+import {getIsAdmin} from "../../service/acessoService.jsx";
+import {AppContext} from "../../commom/context/appContext.jsx";
 
 const drawerWidth = 200;
 
@@ -19,7 +22,17 @@ const ImgEstilizado = styled.img`
 `
 
 const SideMenu = ({ selectedIndex, handleListItemClick }) => {
-  //FEITO - TODO - mudar a cor da barra lateral para enxergar a logo - Lemersom
+  const appContext = useContext(AppContext)
+  const [isAdmin, setIsAdmin] = useState(false)
+
+  async function carregaIsAdmin() {
+    setIsAdmin(await getIsAdmin(appContext.setError))
+  }
+
+  useEffect(() => {
+    carregaIsAdmin()
+  }, [])
+
   return (
     <Box
       component="nav"
@@ -67,16 +80,15 @@ const SideMenu = ({ selectedIndex, handleListItemClick }) => {
               <ListItemText primary="Doação" sx={{ py: 1 }} />
             </ListItemButton>
           </LinkEstilizado>
-          <Divider />
-          {/*TODO - verificar se so admin tem isso, se nao tiver fazer a validacao - Anna*/}
-          <LinkEstilizado to="/cadastrar">
+          {isAdmin && <Divider />}
+          {isAdmin && <LinkEstilizado to="/cadastrar">
             <ListItemButton>
               <ListItemIcon>
                 <AccountCircle style={{color: '#e01f4c'}}/>
               </ListItemIcon>
               <ListItemText primary="Cadastrar" sx={{ py: 2 }} />
             </ListItemButton>
-          </LinkEstilizado>
+          </LinkEstilizado>}
         </List>
         <Divider />
         <LinkEstilizado to="/" onClick={() => {

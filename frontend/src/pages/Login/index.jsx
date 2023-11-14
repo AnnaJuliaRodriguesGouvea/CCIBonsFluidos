@@ -9,7 +9,6 @@ import ContainerLinkCadastrar from "../../componentes/ContainerLinkCadastrar"
 import { Typography } from "@mui/material"
 import {AppContext} from "../../commom/context/appContext.jsx";
 
-// FEITO - TODO - rodando /install no login - Anna
 
 const Login = () => {
     const appContext = useContext(AppContext)
