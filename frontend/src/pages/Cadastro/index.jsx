@@ -13,6 +13,9 @@ import ModalFeedbackEnvio from "../../componentes/ModalFeedbackEnvio"
 import { formataData } from "../../utils/formataData"
 import {AppContext} from "../../commom/context/appContext.jsx";
 import {getIsAdmin} from "../../service/acessoService.jsx";
+import { useNavigate } from "react-router-dom"
+
+// TODO - Token expirou antes de logar
 
 const DivOpcoes = styled.div`
     width: 75%;
@@ -25,7 +28,7 @@ const DivRadioButtons = styled.div`
 
     display: flex;
     justify-content: end;
-    gap: 10px;
+    gap: 30px;
 `
 
 const Cadastro = () => {
@@ -37,6 +40,8 @@ const Cadastro = () => {
 
     const [open, setOpen] = useState(false);
 
+    const navigate = useNavigate()
+
     async function carregaIsAdmin() {
         setIsAdmin(await getIsAdmin(appContext.setError))
     }
@@ -46,7 +51,10 @@ const Cadastro = () => {
     }, [])
 
     const handleOpen = () => setOpen(true);
-    const handleClose = () => setOpen(false);
+    const handleClose = () => {
+        setOpen(false)
+        navigate(-1)
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault()
@@ -151,7 +159,7 @@ const Cadastro = () => {
         if (open) {
           timer = setTimeout(() => {
             handleClose();
-          }, 1750);
+          }, 1500);
         }
         return () => clearTimeout(timer);
     }, [open]);

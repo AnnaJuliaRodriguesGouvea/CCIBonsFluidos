@@ -4,7 +4,7 @@ const Rotulo = styled.label`
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 10px;
+    gap: 5px;
     
     color: rgb(251, 94, 130);
     font-size: 20px;

@@ -83,14 +83,17 @@ const AdicionaDoacao = ({ selectMenuItems }) => {
 
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
-    const handleClose = () => setOpen(false);
+    const handleClose = () => {
+        setOpen(false);
+        handleVoltar()
+    }
 
     useEffect(() => {
         let timer;
         if (open) {
           timer = setTimeout(() => {
             handleClose();
-          }, 1750);
+          }, 1500);
         }
         return () => clearTimeout(timer); 
     }, [open]);

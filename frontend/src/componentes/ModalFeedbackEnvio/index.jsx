@@ -5,7 +5,11 @@ const ModalFeedbackEnvio = ({open, handleClose, texto}) => {
     return (
         <Modal
             open={open}
-            onClose={handleClose}
+            onClose={(event, reason) => {
+                if(reason === 'backdropClick'){
+                    handleClose()
+                }
+            }}
         >
             <Box
                 sx={{

@@ -16,6 +16,7 @@ const Span = styled.span`
     width: 100%;
     height: 100%;
     gap: 10px;
+    align-items: center;
 `
 
 const LinkEstilizado = styled(Link)`
@@ -28,7 +29,7 @@ const ContainerLinkCadastrar = () => {
             <Span>
                 <Texto $tamanho="32px">Não possui uma conta?</Texto>
                 <LinkEstilizado to={'/cadastrar'}>
-                    <Texto $tamanho="32px">Cadastra-se</Texto>
+                    <Texto $tamanho="32px">Cadastre-se</Texto>
                 </LinkEstilizado>
             </Span>
         </ContainerCadastrar>

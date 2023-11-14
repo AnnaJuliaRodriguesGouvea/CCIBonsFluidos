@@ -10,6 +10,7 @@ import {
     Typography
 } from "@mui/material"
 import ModalEdicaoProduto from "../ModalEdicaoProduto"
+import ModalExcluirProduto from "../ModalExcluirProduto/index.jsx";
 import {useContext, useEffect, useState} from "react";
 import {DadosParametrizacao} from "../../commom/context/dadosParametrizacao.jsx";
 import {
@@ -70,8 +71,8 @@ const DataTableProduto = () => {
     async function carregaProdutos() {
         const result = await listarProdutos(limit, page, appContext.setError)
         if(result.status == 200) {
-            setListaProdutos(result)
-            setPageCount(Math.ceil(result.count / limit))
+            setListaProdutos(result.data)
+            setPageCount(Math.ceil(result.data.count / limit))
         }
     }
 

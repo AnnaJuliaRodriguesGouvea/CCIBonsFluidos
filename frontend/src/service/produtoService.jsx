@@ -33,7 +33,7 @@ export async function listarProdutos(limit, page, setError) {
             }
         })
         setError(null)
-        return resultado.data
+        return resultado
     } catch (err) {
         setError(err);
     }

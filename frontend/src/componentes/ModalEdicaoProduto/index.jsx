@@ -36,7 +36,10 @@ const ModalEdicaoProduto = ({ dadosProduto, visible, closeModal }) => {
 
     const [openModalAlert, setOpenModalAlert] = useState(false);
     const handleOpenModalAlert = () => setOpenModalAlert(true);
-    const handleCloseModalAlert = () => setOpenModalAlert(false);
+    const handleCloseModalAlert = () => {
+        setOpenModalAlert(false);
+        closeModal()
+    }
 
     useEffect(() => {
         let timer;
@@ -44,7 +47,7 @@ const ModalEdicaoProduto = ({ dadosProduto, visible, closeModal }) => {
             timer = setTimeout(() => {
                 handleCloseModalAlert();
                 closeModal();
-            }, 1750);
+            }, 1500);
         }
         return () => clearTimeout(timer);
     }, [openModalAlert]);
