@@ -12,7 +12,7 @@ module.exports = {
 
         const {error, value} = Joi.number().integer().required().validate(codigo)
         if(error) {
-            return res.status(400).json({status: false, msg: "O código não é válido"})
+            return res.status(400).json("O código não é válido")
         }
 
         req.body.codigo = value
@@ -22,7 +22,7 @@ module.exports = {
     validaEmail: function(req, res, next) {
         const {error, value} = Joi.string().email().required().validate(req.body.email)
         if(error) {
-            return res.status(400).json({status: false, msg: "O email não pode ser nulo"})
+            return res.status(400).json("O email não pode ser nulo")
         }
         req.body.email = value
         return next()
@@ -31,7 +31,7 @@ module.exports = {
     validaSenha: function(req, res, next) {
         const {error, value} = Joi.string().required().validate(req.body.senha)
         if(error) {
-            return res.status(400).json({status: false, msg: "A senha não pode ser nula"})
+            return res.status(400).json("A senha não pode ser nula")
         }
         req.body.senha = value
         return next()
@@ -40,7 +40,7 @@ module.exports = {
     validaAdmin: function(req, res, next) {
         const {error, value} = Joi.boolean().required().validate(req.body.isAdmin)
         if(error) {
-            return res.status(400).json({status: false, msg: "Admin não pode ser nulo"})
+            return res.status(400).json("Admin não pode ser nulo")
         }
         req.body.isAdmin = value
         return next()
@@ -50,6 +50,6 @@ module.exports = {
         if (await acessoService.isAdmin(req.codigoLogado))
             next()
         else
-            res.status(403).json({status: false, msg: "Usuário logado não é um administrador"})
+            res.status(403).json("Usuário logado não é um administrador")
     },
 }

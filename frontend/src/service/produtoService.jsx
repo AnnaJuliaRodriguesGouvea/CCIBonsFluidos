@@ -2,7 +2,7 @@ import axios from "axios";
 
 export async function adicionarProduto(novoProduto, setError) {
     try {
-        await axios.post('http://localhost:3000/api/product', {
+        const result = await axios.post('http://localhost:3000/api/product', {
             marca: novoProduto.marca,
             nome: novoProduto.nome,
             temAbas: novoProduto.temAba,
@@ -20,6 +20,7 @@ export async function adicionarProduto(novoProduto, setError) {
             }
         })
         setError(null);
+        return result
     } catch (err) {
         setError(err);
     }
@@ -39,9 +40,9 @@ export async function listarProdutos(limit, page, setError) {
     }
 }
 
-export async function listarProdutosComEstoque(substring, setError) {
+export async function listarProdutosComEstoque(substring, isExit, setError) {
     try {
-        const result = await axios.get(`http://localhost:3000/api/product/com-estoque/${substring}`, {
+        const result = await axios.get(`http://localhost:3000/api/product/com-estoque/${substring}?isExit=${isExit}`, {
             headers: {
                 'Authorization': `Bearer ${localStorage.getItem("token")}`,
             }

@@ -10,7 +10,7 @@ const PessoaFisicaModel = sequelize.define('PessoaFisica',
             allowNull: false
         },
         cpf: {
-            type: DataTypes.STRING(11),
+            type: DataTypes.STRING(14),
             allowNull: false
         },
         nome: {

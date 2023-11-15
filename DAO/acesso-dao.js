@@ -8,12 +8,11 @@ module.exports = {
         })
     },
     
-    inserir: async function(email, senha, isAdmin, entidade) {
+    inserir: async function(email, senha, isAdmin) {
         const novoAcesso = await AcessoModel.create({
             email: email.toLowerCase(),
             senha: senha,
             isAdmin: isAdmin,
-            entidade: entidade,
             isExcluido: false
         })
         
@@ -47,6 +46,11 @@ module.exports = {
     },
 
     getByEmail: async function(email) {
-        return await AcessoModel.findOne({ where: { email: email.toLowerCase() } })
+        return await AcessoModel.findOne({
+                where: {
+                    email: email.toLowerCase(),
+                    isExcluido: false
+                }
+            })
     }
 }

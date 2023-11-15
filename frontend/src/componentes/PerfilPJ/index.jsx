@@ -1,41 +1,51 @@
 import { Box, Button, Paper, Toolbar, Typography } from "@mui/material"
-import {useContext, useState} from "react";
+import {useContext, useEffect, useState} from "react";
 import CampoTexto from "../CampoTexto";
 import ModalFeedbackEnvio from "../ModalFeedbackEnvio"
 import { useNavigate } from "react-router-dom";
 import DadosPessoaJuridica from "../DadosPessoaJuridica";
 import {AppContext} from "../../commom/context/appContext.jsx";
-import {alteraPJ, deletePJ} from "../../service/pessoaJuridicaService.jsx";
+import {
+    alterarPessoaJuridica,
+    deletarPessoaJuridica,
+    getPessoaJuridicaLogada
+} from "../../service/pessoaJuridicaService.jsx";
+import {getPessoaFisicaLogada} from "../../service/pessoaFisicaService.jsx";
 
 const PerfilPJ = () => {
-    const infoPJ = {}
     const appContext = useContext(AppContext)
     const navigate = useNavigate();
+    const [open, setOpen] = useState(false);
+    const [formValues, setFormValues] = useState({
+        codigo: "",
+        email:"",
+        senha: "",
+        isAdmin: "",
+        cnpj: "",
+        razaoSocial: "",
+    });
+
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => {
+        setOpen(false)
+        navigate(-1)
+    };
 
     const handleSubmit = async (e) => {
-        //TODO - arrumar o alterar para alterar apenas dados de acesso - Anna
         e.preventDefault();
-        handleOpen()
-        await alteraPJ(formValues, infoPJ?.pessoaJuridica.codigo)
+        const result = await alterarPessoaJuridica(formValues, appContext.setError)
+        if(result && result.status === 200) {
+            handleOpen()
+        }
     }
 
     const handleDelete = async () => {
-        await deletePJ(infoPJ?.pessoaJuridica.codigo)
-        localStorage.clear()
-        navigate('/');
+        const result = await deletarPessoaJuridica(formValues?.codigo, appContext.setError)
+        if(result && result.status === 200) {
+            localStorage.clear()
+            navigate('/');
+        }
     }
-
-    const [formValues, setFormValues] = useState({
-        email: infoPJ?.acesso.email,
-        senha: infoPJ?.acesso.senha,
-        cpf: '',
-        // TODO - tirar o appContext e pegar do valor carregado da pagina - Anna
-        isAdmin: appContext.isAdmin,
-        nomePF: '',
-        dataDeNascimento: '',
-        cnpj: infoPJ.pessoaJuridica.cnpj,
-        razaoSocial: infoPJ.pessoaJuridica.razaoSocial,
-    });
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -45,9 +55,35 @@ const PerfilPJ = () => {
         });
     }
 
-    const [open, setOpen] = useState(false);
-    const handleOpen = () => setOpen(true);
-    const handleClose = () => setOpen(false);
+    async function carregaDadosPessoaJuridica(){
+        const result = await getPessoaJuridicaLogada(appContext.setError)
+        if(result && result.status === 200)
+            setFormValues({
+                codigo: result.data.acesso.codigo,
+                email: result.data.acesso.email,
+                senha: result.data.acesso.senha,
+                isAdmin: result.data.acesso.isAdmin,
+                cnpj: result.data.pessoaJuridica.cnpj,
+                razaoSocial: result.data.pessoaJuridica.razaoSocial,
+            })
+    }
+
+    useEffect(() => {
+        carregaDadosPessoaJuridica()
+    }, []);
+
+    useEffect(() => {
+    }, [formValues]);
+
+    useEffect(() => {
+        let timer;
+        if (open) {
+            timer = setTimeout(() => {
+                handleClose();
+            }, 1500);
+        }
+        return () => clearTimeout(timer);
+    }, [open]);
 
     return (
         <Box
@@ -73,7 +109,7 @@ const PerfilPJ = () => {
                 <CampoTexto
                     label="Email"
                     nome="email"
-                    valor={formValues.email}
+                    valor={formValues?.email}
                     tipo="email"
                     placeholder="Digite o seu endereço de email"
                     aoAlterar={handleChange}
@@ -81,18 +117,18 @@ const PerfilPJ = () => {
                 <CampoTexto
                     label="Senha"
                     nome="senha"
-                    valor={formValues.senha}
+                    valor={formValues?.senha}
                     tipo="password"
                     placeholder="Digite a sua senha"
                     aoAlterar={handleChange}
                 />
                 <DadosPessoaJuridica
-                    CNPJ={formValues.cnpj}
+                    CNPJ={formValues?.cnpj}
                     handleChangeCNPJ={handleChange}
-                    razaoSocial={formValues.razaoSocial}
+                    razaoSocial={formValues?.razaoSocial}
                     handleChangeRazaoSocial={handleChange}
                 />
-                {appContext.error && <Typography variant="body2" sx={{ color: 'error.main', textAlign: 'center', fontWeight: 700 }}>{appContext.error.message}</Typography>}
+                {appContext.error && <Typography variant="body2" sx={{ color: 'error.main', textAlign: 'center', fontWeight: 700 }}>{appContext.error.response.data}</Typography>}
                 <Box sx={{ width: '76%', display: 'flex', justifyContent: 'space-between' }}>
                     <Button type="submit" variant="contained">Alterar</Button>
                     {!appContext.error && <ModalFeedbackEnvio open={open} handleClose={handleClose} texto='Cadastro atualizado com sucesso!' />}

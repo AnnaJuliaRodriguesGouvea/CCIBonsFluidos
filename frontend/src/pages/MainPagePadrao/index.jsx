@@ -1,10 +1,9 @@
 import { AppBar, Box, Button, Container, CssBaseline, Popover, Toolbar, Typography } from "@mui/material";
 import SideMenu from "../../componentes/SideMenu";
-import { Link, Outlet } from "react-router-dom";
-import { useEffect, useState } from "react";
+import {Link, Outlet, useNavigate} from "react-router-dom";
+import {useContext, useEffect, useState} from "react";
 import styled from "@emotion/styled";
-
-// FEITO - TODO - recarregar as páginas está deletando as tabelas - Anna
+import {AppContext} from "../../commom/context/appContext.jsx";
 
 const LinkEstilizado = styled(Link)`
     text-decoration: none;
@@ -13,48 +12,32 @@ const LinkEstilizado = styled(Link)`
 
 const drawerWidth = 200;
 
-const MainPagePadrao = ({ selectedIndex, setSelectedIndex, aoClickarItemLista }) => {
+const MainPagePadrao = (props) => {
+    const appContext = useContext(AppContext)
+    const [anchorEl, setAnchorEl] = useState(null);
+    const isOpen = Boolean(anchorEl);
+    const navigate = useNavigate();
 
-  useEffect(() => {
-    setSelectedIndex(-1)
-  }, [])
+    const handleClick = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
 
-  //TODO - fazer no back a verificacao de exclusao logica na rota de login - Anna
-  // if (infoPJ?.acesso.isExcluido) {
-  //   localStorage.clear()
-  //   alert('Acesso negado!')
-  //   navigate('/')
-  // } else if (infoPF?.acesso.isExcluido) {
-  //   localStorage.clear()
-  //   alert('Acesso negado!')
-  //   navigate('/')
-  // }
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
 
-  const [anchorEl, setAnchorEl] = useState(null);
-
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
-  // FEITO - TODO - renomer para isOpen - Anna
-  const isOpen = Boolean(anchorEl);
-  const id = isOpen ? 'simple-popover' : undefined;
+    useEffect(() => {
+        if(!localStorage.getItem("token")) {
+           navigate(-1)
+        } else {
+            appContext.setSelectedIndex(-1)
+        }
+    }, [])
 
   return (
-    <Container sx={{
-      display: 'flex',
-      p: '0',
-      m: '0',
-      '@media (min-width: 600px)': {
-        p: '0',
-      },
-      '@media (min-width: 1200px)': {
-        maxWidth: 'none',
-      }
+    <Container sx={{display: 'flex', p: '0', m: '0',
+        '@media (min-width: 600px)': {p: '0'},
+        '@media (min-width: 1200px)': {maxWidth: 'none'}
     }}>
       <CssBaseline />
       <AppBar
@@ -63,20 +46,21 @@ const MainPagePadrao = ({ selectedIndex, setSelectedIndex, aoClickarItemLista })
           width: `calc(100% - ${drawerWidth}px)`,
           ml: `${drawerWidth}px`,
           background: 'linear-gradient(#e66465, #9198e5)',
-        }}
-      >
+        }}>
         <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
           <Typography
             variant="h4"
-            component="div"
-          >
+            component="div">
             Solidary Flow
           </Typography>
-          <Button aria-describedby={id} onClick={handleClick} sx={{ fontSize: '16px', color: '#FFF', p: 2 }}>
-            Minha Conta
+          <Button
+              aria-describedby={isOpen ? 'simple-popover' : undefined}
+              onClick={handleClick}
+              sx={{ fontSize: '16px', color: '#FFF', p: 2 }}>
+                Minha Conta
           </Button>
           <Popover
-            id={id}
+            id={isOpen ? 'simple-popover' : undefined}
             open={isOpen}
             anchorEl={anchorEl}
             onClose={handleClose}
@@ -106,7 +90,7 @@ const MainPagePadrao = ({ selectedIndex, setSelectedIndex, aoClickarItemLista })
           </Popover>
         </Toolbar>
       </AppBar>
-      <SideMenu selectedIndex={selectedIndex} handleListItemClick={aoClickarItemLista} />
+      <SideMenu/>
       <Box
         component="main"
         sx={{

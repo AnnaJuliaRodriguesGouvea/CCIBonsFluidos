@@ -51,9 +51,9 @@ module.exports = {
         return {status: 500, data: "Desculpe, não foi possível realizar essa pesquisa"}
     },
 
-    cadastrarAcesso: async function(email, senha, isAdmin, entidade) {
+    cadastrarAcesso: async function(email, senha, isAdmin) {
         if (!await this.existeEmail(email)) {
-            const acesso = await acessoDAO.inserir(email, senha, isAdmin, entidade)
+            const acesso = await acessoDAO.inserir(email, senha, isAdmin)
             return {status: 201, data: acesso}
         }
         return {status: 409, data: "Já existe um acesso com esse email"}
@@ -68,7 +68,7 @@ module.exports = {
             return {status: 404, data: "Não existe um acesso com esse código"}
         }
 
-        if(codigoLogado === codigo) {
+        if(codigoLogado == codigo) {
             if(isAdmin) {
                 return {status: 403, data: "Você não possui permissão para alterar sua própria permissão"}
             }
@@ -79,7 +79,7 @@ module.exports = {
     },
 
     excluirAcesso: async function(codigoLogado, codigo) {
-        if(await this.isAdmin(codigoLogado) || codigoLogado === codigo) {
+        if(await this.isAdmin(codigoLogado) || codigoLogado == codigo) {
             if(await this.existeCodigo(codigo)) {
                 const response = await excluirDadosAcesso(codigo)
                 return {status: 200, data: response}

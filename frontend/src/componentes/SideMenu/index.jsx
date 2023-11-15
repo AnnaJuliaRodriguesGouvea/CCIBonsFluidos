@@ -21,89 +21,95 @@ const ImgEstilizado = styled.img`
   box-sizing: border-box;
 `
 
-const SideMenu = ({ selectedIndex, handleListItemClick }) => {
-  const appContext = useContext(AppContext)
-  const [isAdmin, setIsAdmin] = useState(false)
+const SideMenu = () => {
+    const appContext = useContext(AppContext)
+    const [isAdmin, setIsAdmin] = useState(false)
 
-  async function carregaIsAdmin() {
-    setIsAdmin(await getIsAdmin(appContext.setError))
-  }
+    async function carregaIsAdmin() {
+      setIsAdmin(await getIsAdmin(appContext.setError))
+    }
 
-  useEffect(() => {
-    carregaIsAdmin()
-  }, [])
+    const handleListItemClick = (index) => {
+      appContext.setSelectedIndex(index);
+    };
 
-  return (
-    <Box
-      component="nav"
-      sx={{
-        width: drawerWidth,
-      }}
-    >
-      <Drawer
-        variant="permanent"
+    useEffect(() => {
+        appContext.setSelectedIndex(-1)
+        appContext.setError(null)
+        carregaIsAdmin()
+    }, [])
+
+    return (
+      <Box
+        component="nav"
         sx={{
-          '& .MuiDrawer-paper': { 
-            boxSizing: 'border-box', 
-            width: drawerWidth, 
-            bgcolor: '#C0C0C0' 
-          },
+          width: drawerWidth,
         }}
       >
-        <Toolbar sx={{ display: 'flex', justifyContent: 'center', p: 0 }}>
-          <ImgEstilizado src="/public/logo-bons-fluidos-removebg-titulo.png" alt="logo" />
-        </Toolbar>
-        <Divider />
-        <List>
-          <LinkEstilizado to="/home/produto">
-            <ListItemButton
-              selected={selectedIndex === 0}
-              onClick={() => handleListItemClick(0)}
-            >
-              <ListItemIcon>
-                <AddBox style={{color: '#e01f4c'}}/>
-              </ListItemIcon>
-              <ListItemText
-                primary="Produto"
-                sx={{ py: 1 }}
-              />
-            </ListItemButton>
-          </LinkEstilizado>
-          <LinkEstilizado to="/home/doacao">
-            <ListItemButton
-              selected={selectedIndex === 1}
-              onClick={() => handleListItemClick(1)}
-            >
-              <ListItemIcon>
-                <VolunteerActivism style={{color: '#e01f4c'}}/>
-              </ListItemIcon>
-              <ListItemText primary="Doação" sx={{ py: 1 }} />
-            </ListItemButton>
-          </LinkEstilizado>
-          {isAdmin && <Divider />}
-          {isAdmin && <LinkEstilizado to="/cadastrar">
+        <Drawer
+          variant="permanent"
+          sx={{
+            '& .MuiDrawer-paper': {
+              boxSizing: 'border-box',
+              width: drawerWidth,
+              bgcolor: '#C0C0C0'
+            },
+          }}
+        >
+          <Toolbar sx={{ display: 'flex', justifyContent: 'center', p: 0 }}>
+            <ImgEstilizado src="/public/logo-bons-fluidos-removebg-titulo.png" alt="logo" />
+          </Toolbar>
+          <Divider />
+          <List>
+            <LinkEstilizado to="/home/produto">
+              <ListItemButton
+                selected={appContext.selectedIndex === 0}
+                onClick={() => handleListItemClick(0)}
+              >
+                <ListItemIcon>
+                  <AddBox style={{color: '#e01f4c'}}/>
+                </ListItemIcon>
+                <ListItemText
+                  primary="Produto"
+                  sx={{ py: 1 }}
+                />
+              </ListItemButton>
+            </LinkEstilizado>
+            <LinkEstilizado to="/home/doacao">
+              <ListItemButton
+                selected={appContext.selectedIndex === 1}
+                onClick={() => handleListItemClick(1)}
+              >
+                <ListItemIcon>
+                  <VolunteerActivism style={{color: '#e01f4c'}}/>
+                </ListItemIcon>
+                <ListItemText primary="Doação" sx={{ py: 1 }} />
+              </ListItemButton>
+            </LinkEstilizado>
+            {isAdmin && <Divider />}
+            {isAdmin && <LinkEstilizado to="/cadastrar">
+              <ListItemButton>
+                <ListItemIcon>
+                  <AccountCircle style={{color: '#e01f4c'}}/>
+                </ListItemIcon>
+                <ListItemText primary="Cadastrar" sx={{ py: 2 }} />
+              </ListItemButton>
+            </LinkEstilizado>}
+          </List>
+          <Divider />
+          <LinkEstilizado to="/" onClick={() => {
+            localStorage.clear()
+          }}>
             <ListItemButton>
               <ListItemIcon>
-                <AccountCircle style={{color: '#e01f4c'}}/>
+                <Logout style={{color: '#e01f4c'}}/>
               </ListItemIcon>
-              <ListItemText primary="Cadastrar" sx={{ py: 2 }} />
+              <ListItemText primary="Sair" sx={{ color: '#e01f4c', p: 2 }} />
             </ListItemButton>
-          </LinkEstilizado>}
-        </List>
-        <Divider />
-        <LinkEstilizado to="/" onClick={() => {
-          localStorage.clear()
-        }}>
-          <ListItemButton>
-            <ListItemIcon>
-              <Logout style={{color: '#e01f4c'}}/>
-            </ListItemIcon>
-            <ListItemText primary="Sair" sx={{ color: '#e01f4c', p: 2 }} />
-          </ListItemButton>
-        </LinkEstilizado >
-      </Drawer>
-    </Box>
-  )
+          </LinkEstilizado >
+        </Drawer>
+      </Box>
+    )
 }
 
 export default SideMenu

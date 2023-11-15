@@ -9,11 +9,11 @@ module.exports = {
     validaLimite: function(req, res, next) {
         const {error, value} = Joi.number().integer().required().validate(req.query.limite)
         if(error) {
-            return res.status(400).json({status: false, msg: "O limite não pode ser nulo"})
+            return res.status(400).json("O limite não pode ser nulo")
         }
 
         if(req.query.limite != limiteMinimo && req.query.limite != limiteMedio && req.query.limite != limiteMaximo) {
-            return res.status(400).json({status: false, msg: "O limite só pode ser 5, 10 ou 30"})
+            return res.status(400).json("O limite só pode ser 5, 10 ou 30")
         }
 
         req.query.limite = value
@@ -23,7 +23,7 @@ module.exports = {
     validaPagina: function(req, res, next) {
         const {error, value} = Joi.number().integer().required().validate(req.query.pagina)
         if(error) {
-            return res.status(400).json({status: false, msg: "A pagina não pode ser nula"})
+            return res.status(400).json("A pagina não pode ser nula")
         }
 
         req.query.pagina = value

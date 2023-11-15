@@ -67,7 +67,7 @@ const DataTableProduto = () => {
 
     async function carregaProdutos() {
         const result = await listarProdutos(limit, page, appContext.setError)
-        if(result.status == 200) {
+        if(result && result.status == 200) {
             setListaProdutos(result.data)
             setPageCount(Math.ceil(result.data.count / limit))
         }
@@ -79,8 +79,9 @@ const DataTableProduto = () => {
 
     const handleDeleteRow = async (codigoDoProduto) => {
         const result = await deletaProduto(codigoDoProduto, appContext.setError)
-        if (result.status == 200)
-            carregaProdutos()
+        if (result && result.status == 200)
+            setPage(1)
+            await carregaProdutos()
     }
 
     useEffect(() => {
@@ -93,7 +94,7 @@ const DataTableProduto = () => {
 
     useEffect(() => {
         carregaProdutos()
-    }, [page])
+    }, [page, pageCount])
 
     useEffect(() => {
         carregaProdutos()

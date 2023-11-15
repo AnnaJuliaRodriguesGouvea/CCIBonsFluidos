@@ -6,12 +6,11 @@ module.exports = {
     login: async function(email, senha) {
         var acessoRespose = await acessoService.getAcessoByEmail(email)
         if (acessoRespose instanceof AcessoModel) {
-            // TODO - mudar validacao em um metodo privado
             if (acessoRespose.senha === senha) {
                 let token = jwt.sign({codigoLogado: acessoRespose.codigo}, process.env.JWT_SECRET, {
                     expiresIn: '1h'
                 })
-                return ({status: 200, data: token, codigo: acessoRespose.codigo, isAdmin: acessoRespose.isAdmin, entidade: acessoRespose.entidade})
+                return ({status: 200, data: token, codigo: acessoRespose.codigo, isAdmin: acessoRespose.isAdmin})
             } else {
                 return {status: 400, data: "Senha incorreta"}
             }

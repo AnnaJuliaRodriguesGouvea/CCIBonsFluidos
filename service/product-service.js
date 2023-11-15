@@ -25,8 +25,14 @@ module.exports = {
         return {status: 500, data: "Desculpe, não foi possível realizar essa pesquisa"}
     },
 
-    productsListWithStock: async function(substring) {
-        const products = await produtoDao.listarComEstoque(substring)
+    productsListWithStock: async function(substring, isExit) {
+        let products = null
+        if (typeof isExit === "string" && isExit === "true") {
+            products = await produtoDao.listarComEstoqueSaida(substring)
+        } else {
+            products = await produtoDao.listarComEstoqueEntrada(substring)
+        }
+
         if (products) {
             if(products.length > 0)
                 return {status: 200, data: products}
@@ -80,7 +86,7 @@ module.exports = {
         const product = await this.getProductByCode(codigo)
 
         if(product.quantidadeDePacote - quantidade < 0){
-            return {status: 404, data: "Quantidade de pacotes não pode ser menor que zero"}
+            return {status: 404, data: "Quantidade de pacotes maior do que estoque"}
         }
 
         const response = await produtoDao.saidaDePacote(codigo, quantidade)

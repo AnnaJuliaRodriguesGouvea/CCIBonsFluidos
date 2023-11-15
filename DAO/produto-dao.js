@@ -13,10 +13,20 @@ module.exports = {
         return produtos
     },
 
-    listarComEstoque: async function(substring) {
+    listarComEstoqueEntrada: async function(substring) {
         const produtos = await ProdutoModel.findAll({
             where: {
                 isExcluido: false,
+                quantidadeDePacote: { [Op.gt]: 0 },
+                nome: { [Op.iLike]: `%${substring}%` }
+            }
+        })
+        return produtos
+    },
+
+    listarComEstoqueSaida: async function(substring) {
+        const produtos = await ProdutoModel.findAll({
+            where: {
                 quantidadeDePacote: { [Op.gt]: 0 },
                 nome: { [Op.iLike]: `%${substring}%` }
             }

@@ -1,8 +1,9 @@
 import DataTableDoacao from "../../componentes/DataTableDoacao"
 import { Box, Button } from "@mui/material";
 import { styled } from '@mui/material/styles';
-import { Link } from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import {DadosParametrizacaoProvider} from "../../commom/context/dadosParametrizacao.jsx";
+import {useEffect} from "react";
 
 const LinkEstilizado = styled(Link)`
   text-decoration: none;
@@ -13,6 +14,13 @@ const LinkEstilizado = styled(Link)`
 `
 
 const Doacao = () => {
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (!localStorage.getItem("token")) {
+            navigate(-1)
+        }
+    }, [])
 
     return (
         <Box sx={{ height: '80%', width: '70%', mx: 'auto', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>

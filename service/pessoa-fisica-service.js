@@ -43,12 +43,12 @@ module.exports = {
         return {status: 404, data: "Não existe uma pessoa física com esse código"}
     },
 
-    cadastrarPessoaFisica: async function(email, senha, isAdmin, cpf, nome, dataNascimento, entidade) {
+    cadastrarPessoaFisica: async function(email, senha, isAdmin, cpf, nome, dataNascimento) {
         if(await this.existeCPF(cpf)) {
             return {status: 409, data: "Já existe um cadastro com esse CPF"}
         }
         
-        const acessoResponse = await acessoService.cadastrarAcesso(email, senha, isAdmin, entidade)
+        const acessoResponse = await acessoService.cadastrarAcesso(email, senha, isAdmin)
         if(acessoResponse.data instanceof AcessoModel) {
             const novaPessoaFisica = await pessoaFisicaDao.inserir(acessoResponse.data.codigo, cpf, nome, dataNascimento)
             if (novaPessoaFisica instanceof PessoaFisicaModel) {
@@ -63,7 +63,7 @@ module.exports = {
     atualizarPessoaFisica: async function(codigoLogado, codigo, email, senha, isAdmin, cpf, nome, dataNascimento) {
         const acessoResponse = await acessoService.atualizarAcesso(codigoLogado, codigo, email, senha, isAdmin)
         if(acessoResponse.status === 200) {
-            if(await acessoService.isAdmin(codigoLogado) || codigoLogado === codigo) {
+            if(await acessoService.isAdmin(codigoLogado) || codigoLogado == codigo) {
                 const [response] = await atualizarDadosPessoaFisica(codigo, cpf, nome, dataNascimento)
                 return {status: 200, data: response}
             }
@@ -74,7 +74,7 @@ module.exports = {
     },
 
     excluirPessoaFisica: async function(codigoLogado, codigo) {
-        if(await acessoService.isAdmin(codigoLogado) || codigoLogado === codigo) {
+        if(await acessoService.isAdmin(codigoLogado) || codigoLogado == codigo) {
             if(await this.existeCodigo(codigo)) {
                 const response = await excluirDadosPessoaFisica(codigo)
                 const acessoResponse = await acessoService.excluirAcesso(codigoLogado, codigo)

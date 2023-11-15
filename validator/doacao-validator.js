@@ -9,7 +9,7 @@ module.exports = {
         const { error, value } = Joi.date().format('DD/MM/YYYY').utc().required().validate(req.body.data);
 
         if (error) {
-            return res.status(400).json({ status: false, msg: "A data não pode ser nula" })
+            return res.status(400).json("A data não pode ser nula")
         }
 
         req.body.data = value
@@ -20,7 +20,7 @@ module.exports = {
         const { error, value } = Joi.number().integer().required().validate(req.body.quantidade);
 
         if (error) {
-            return res.status(400).json({ status: false, msg: "É necessario informar a quantidade, deve ser um valor inteiro" })
+            return res.status(400).json("É necessario informar a quantidade, deve ser um valor inteiro")
         }
 
         req.body.quantidade = value
@@ -31,7 +31,7 @@ module.exports = {
         const { error, value } = Joi.number().integer().required().validate(req.body.codigo_transacao);
 
         if (error) {
-            return res.status(400).json({ status: false, msg: "É necessario informar o código de transação, deve ser um valor inteiro" })
+            return res.status(400).json("É necessario informar o código de transação, deve ser um valor inteiro")
         }
 
         if ([1, 2].includes(req.body.codigo_transacao)) {
@@ -39,7 +39,7 @@ module.exports = {
             return next()
         }
         else {
-            return res.status(403).json({ status: false, msg: "Informe um código de transação valido" })
+            return res.status(403).json("Informe um código de transação valido")
         }
 
     },
@@ -48,7 +48,7 @@ module.exports = {
         const { error, value } = Joi.number().integer().required().validate(req.body.codigo_produto);
 
         if (error) {
-            return res.status(400).json({ status: false, msg: "É necessario informar o código do produto, deve ser um valor inteiro" })
+            return res.status(400).json("É necessario informar o código do produto, deve ser um valor inteiro")
         }
 
         if (await produtoService.existsCode(req.body.codigo_produto)) {
@@ -56,7 +56,7 @@ module.exports = {
             return next()
         }
         else {
-            return res.status(403).json({ status: false, msg: "O produto informado não existe" })
+            return res.status(403).json("O produto informado não existe")
         }
 
     },
@@ -65,7 +65,7 @@ module.exports = {
         const { error, value } = Joi.number().integer().required().validate(req.body.codigo_acesso);
 
         if (error) {
-            return res.status(400).json({ status: false, msg: "É necessario informar o código de acesso, deve ser um valor inteiro" })
+            return res.status(400).json("É necessario informar o código de acesso, deve ser um valor inteiro")
         }
 
         if (await acessoService.existeCodigo(req.body.codigo_acesso)) {
@@ -73,7 +73,7 @@ module.exports = {
             return next()
         }
         else {
-            return res.status(403).json({ status: false, msg: "O código de acesso informado não existe" })
+            return res.status(403).json("O código de acesso informado não existe")
         }
     },
 
@@ -81,7 +81,7 @@ module.exports = {
         const { error, value } = Joi.number().integer().required().validate(req.body.cnpj_destino);
 
         if (error) {
-            return res.status(400).json({ status: false, msg: "É necessario informar o código do cnpj de destino, deve ser um valor inteiro" })
+            return res.status(400).json("É necessario informar o código do cnpj de destino, deve ser um valor inteiro")
         }
 
         if (await pessoaJuridicaService.existeCodigo(req.body.cnpj_destino)) {
@@ -89,7 +89,7 @@ module.exports = {
             return next()
         }
         else {
-            return res.status(403).json({ status: false, msg: "O cnpj de destino informado não existe" })
+            return res.status(403).json("O cnpj de destino informado não existe")
         }
     }
 }

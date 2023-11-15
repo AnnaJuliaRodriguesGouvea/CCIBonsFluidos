@@ -3,7 +3,7 @@ import {formataData} from "../utils/formataData/index.js";
 
 export async function adicionarDoacao(novaDoacao, setError) {
     try {
-        await axios.post('http://localhost:3000/api/doacao', {
+        const result = await axios.post('http://localhost:3000/api/doacao', {
             data: formataData(novaDoacao.data),
             quantidade: parseInt(novaDoacao.quantidade),
             codigo_transacao: novaDoacao.codigo_transacao,
@@ -16,8 +16,8 @@ export async function adicionarDoacao(novaDoacao, setError) {
             }
         })
         setError(null);
+        return result
     } catch (err) {
-        console.log(err)
         setError(err);
     }
 }

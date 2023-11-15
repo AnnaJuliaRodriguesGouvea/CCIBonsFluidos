@@ -18,7 +18,7 @@ router.get("/",
 router.get("/com-estoque/:substring",
     autenticacaoValidator.validarToken,
     async (req, res) => {
-            const response = await productService.productsListWithStock(req.params.substring)
+            const response = await productService.productsListWithStock(req.params.substring, req.query.isExit)
             res.status(response.status).json(response.data)
     })
 

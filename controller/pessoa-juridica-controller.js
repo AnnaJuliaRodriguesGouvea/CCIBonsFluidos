@@ -15,7 +15,7 @@ router.get("/",
         res.status(response.status).json(response.data)
 })
 
-router.get("/:substring",
+router.get("/razao-social/:substring",
     autenticacaoValidator.validarToken,
     async (req, res) => {
             const response = await pessoaJuridicaService.listarTodasPessoaJuridica(req.params.substring)
@@ -30,6 +30,13 @@ router.get("/:codigo",
         res.status(response.status).json(response.data)
 })
 
+router.get("/logado/dados",
+    autenticacaoValidator.validarToken,
+    async (req, res) => {
+            const response = await pessoaJuridicaService.buscarCodigo(req.codigoLogado)
+            res.status(response.status).json(response.data)
+    })
+
 router.post("/",
     acessoValidator.validaEmail,
     acessoValidator.validaSenha,
@@ -41,8 +48,7 @@ router.post("/",
             req.body.senha, 
             false,
             req.body.cnpj,
-            req.body.razaoSocial,
-            "PessoaJuridica"
+            req.body.razaoSocial
         )
         res.status(response.status).json(response.data)
 })
@@ -60,8 +66,7 @@ router.post("/admin",
             req.body.senha, 
             true,
             req.body.cnpj,
-            req.body.razaoSocial,
-            "PessoaJuridica"
+            req.body.razaoSocial
         )
         res.status(response.status).json(response.data)
 })

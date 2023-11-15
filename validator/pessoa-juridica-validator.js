@@ -10,7 +10,7 @@ module.exports = {
 
         const {error, value} = Joi.string().required().validate(cnpj)
         if(error) {
-            return res.status(400).json({status: false, msg: "O cnpj não pode ser nulo e deve ser uma string"})
+            return res.status(400).json("O cnpj não pode ser nulo e deve ser uma string")
         }
         //TODO - fazer o calculo do cnpj - Anna
         if (cnpj.length !== 14) {
@@ -19,7 +19,7 @@ module.exports = {
             cnpj = cnpj.replaceAll("/", "")
             const {error, value} = Joi.string().length(14).required().validate(cnpj)
             if(error) {
-                return res.status(400).json({status: false, msg: "O cnpj não é válido"})
+                return res.status(400).json("O cnpj não é válido")
             }
         }
 
@@ -30,7 +30,7 @@ module.exports = {
     validaRazaoSocial: function(req, res, next) {
         const {error, value} = Joi.string().required().validate(req.body.razaoSocial)
         if(error) {
-            return res.status(400).json({status: false, msg: "A razão social não pode ser nula"})
+            return res.status(400).json("A razão social não pode ser nula")
         }
         req.body.razaoSocial = value
         return next()

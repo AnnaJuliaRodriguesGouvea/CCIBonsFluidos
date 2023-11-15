@@ -2,7 +2,6 @@ const pessoaJuridicaDao = require("../DAO/pessoa-juridica-dao")
 const AcessoModel = require("../model/Acesso")
 const PessoaJuridicaModel = require("../model/PessoaJuridica")
 const acessoService = require("../service/acesso-service")
-const produtoDao = require("../DAO/produto-dao");
 
 async function atualizarDadosPessoaJuridica(codigo, cnpj, razaoSocial) {
     return await pessoaJuridicaDao.atualizar(codigo, cnpj, razaoSocial)
@@ -54,12 +53,12 @@ module.exports = {
         return {status: 404, data: "Não existe uma pessoa jurídica com esse código"}
     },
 
-    cadastrarPessoaJuridica: async function(email, senha, isAdmin, cnpj, razaoSocial, entidade) {
+    cadastrarPessoaJuridica: async function(email, senha, isAdmin, cnpj, razaoSocial) {
         if(await this.existeCNPJ(cnpj)) {
             return {status: 409, data: "Já existe um cadastro com esse CNPJ"}
         }
         
-        const acessoResponse = await acessoService.cadastrarAcesso(email, senha, isAdmin, entidade)
+        const acessoResponse = await acessoService.cadastrarAcesso(email, senha, isAdmin)
         if(acessoResponse.data instanceof AcessoModel) {
             const novaPessoaJuridica = await pessoaJuridicaDao.inserir(acessoResponse.data.codigo, cnpj, razaoSocial)
             if (novaPessoaJuridica instanceof PessoaJuridicaModel) {
@@ -74,7 +73,7 @@ module.exports = {
     atualizarPessoaJuridica: async function(codigoLogado, codigo, email, senha, isAdmin, cnpj, razaoSocial) {
         const acessoResponse = await acessoService.atualizarAcesso(codigoLogado,codigo, email, senha, isAdmin)
         if(acessoResponse.status === 200) {
-            if(await acessoService.isAdmin(codigoLogado) || codigoLogado === codigo) {
+            if(await acessoService.isAdmin(codigoLogado) || codigoLogado == codigo) {
                 const [response] = await atualizarDadosPessoaJuridica(codigo, cnpj, razaoSocial)
                 return {status: 200, data: response}
             }
@@ -85,7 +84,7 @@ module.exports = {
     },
 
     excluirPessoaJuridica: async function(codigoLogado, codigo) {
-        if(await acessoService.isAdmin(codigoLogado) || codigoLogado === codigo) {
+        if(await acessoService.isAdmin(codigoLogado) || codigoLogado == codigo) {
             if(await this.existeCodigo(codigo)) {
                 const response = await excluirDadosPessoaJuridica(codigo)
                 const acessoResponse = await acessoService.excluirAcesso(codigoLogado, codigo)

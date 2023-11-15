@@ -33,9 +33,9 @@ const AdicionaDoacao = ({ selectMenuItems }) => {
         cnpj_destino: '',
     });
 
-    async function carregaListaDeProdutos(substring) {
-        const result = await listarProdutosComEstoque(substring, appContext.setError)
-        if(result.status === 200) {
+    async function carregaListaDeProdutos(substring, isExit) {
+        const result = await listarProdutosComEstoque(substring, isExit, appContext.setError)
+        if (result.status === 200) {
             setListaProdutos(result.data)
         }
     }
@@ -51,6 +51,16 @@ const AdicionaDoacao = ({ selectMenuItems }) => {
         setListaTransacoes(await getTransacao(appContext.setError))
     }
 
+    const clearDadosProdutos = (value) => {
+        setFormValues({
+            data: formValues.data,
+            quantidade: formValues.quantidade,
+            codigo_transacao: value,
+            codigo_produto: '',
+            cnpj_destino: formValues.cnpj_destino,
+        })
+    }
+
     const handleInputChange = (e) => {
         const { name, value, type, checked } = e.target;
         if (type === 'checkbox') {
@@ -64,13 +74,17 @@ const AdicionaDoacao = ({ selectMenuItems }) => {
                 [name]: value,
             });
         }
+
+        if(name === "codigo_transacao")
+            clearDadosProdutos(value)
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            await adicionarDoacao(formValues, appContext.setError);
-            handleOpenModal()
+            const result = await adicionarDoacao(formValues, appContext.setError);
+            if(result && result.status == 201)
+                handleOpenModal()
         } catch (err) {
             alert(err)
         }
@@ -87,7 +101,12 @@ const AdicionaDoacao = ({ selectMenuItems }) => {
     }
 
     useEffect(() => {
-        carregaDadosTransacao()
+        if (!localStorage.getItem("token")) {
+            navigate(-1)
+        } else {
+            appContext.setError(null)
+            carregaDadosTransacao()
+        }
     }, [])
 
     useEffect(() => {
@@ -198,7 +217,10 @@ const AdicionaDoacao = ({ selectMenuItems }) => {
                                     }}
                                     onInputChange={async (event, newValue) => {
                                         if(newValue.length > 3)
-                                            await carregaListaDeProdutos(newValue)
+                                            if(formValues.codigo_transacao == 1)
+                                                await carregaListaDeProdutos(newValue, false)
+                                            else if(formValues.codigo_transacao == 2)
+                                                await carregaListaDeProdutos(newValue, true)
                                     }}
                                     renderInput={(params) => (
                                         <TextField
@@ -239,7 +261,7 @@ const AdicionaDoacao = ({ selectMenuItems }) => {
                                     noOptionsText="Nenhuma instituição encontrada"
                                 />
                             </FormControl>
-                            {appContext.error && <Typography variant="body2" sx={{ color: 'error.main', textAlign: 'center', fontWeight: 700 }}>Todos os campos devem ser preenchidos corretamente!</Typography>}
+                            {appContext.error && <Typography variant="body2" sx={{ color: 'error.main', textAlign: 'center', fontWeight: 700 }}>{appContext.error.response.data}</Typography>}
                             <Button type="submit" variant="contained" color="secondary">
                                 Enviar
                             </Button>

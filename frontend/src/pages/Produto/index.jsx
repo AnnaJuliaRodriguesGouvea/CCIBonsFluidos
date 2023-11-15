@@ -1,6 +1,6 @@
 import { Box, Button } from "@mui/material";
 import { styled } from '@mui/material/styles';
-import { Link } from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import DataTableProduto from "../../componentes/DataTableProduto";
 import {useContext, useEffect, useState} from "react";
 import {DadosParametrizacaoProvider} from "../../commom/context/dadosParametrizacao.jsx";
@@ -18,13 +18,18 @@ const LinkEstilizado = styled(Link)`
 const Produto = () => {
     const appContext = useContext(AppContext)
     const [isAdmin, setIsAdmin] = useState(false)
+    const navigate = useNavigate();
 
     async function carregaIsAdmin() {
         setIsAdmin(await getIsAdmin(appContext.setError))
     }
 
     useEffect(() => {
-        carregaIsAdmin()
+        if(!localStorage.getItem("token")) {
+            navigate(-1)
+        } else {
+            carregaIsAdmin()
+        }
     }, [])
 
     return (

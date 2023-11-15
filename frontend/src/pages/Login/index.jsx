@@ -1,4 +1,4 @@
-import {useContext, useState} from "react"
+import {useContext, useEffect, useState} from "react"
 import { useNavigate } from "react-router-dom"
 import axios from "axios"
 import ContainerForm from "../../componentes/ContainerForm"
@@ -8,6 +8,7 @@ import FormBT from "../../componentes/FormBT"
 import ContainerLinkCadastrar from "../../componentes/ContainerLinkCadastrar"
 import { Typography } from "@mui/material"
 import {AppContext} from "../../commom/context/appContext.jsx";
+import {login} from "../../service/autenticacaoService.jsx";
 
 
 const Login = () => {
@@ -19,26 +20,13 @@ const Login = () => {
         senha: ''
     });
 
-    const [erro, setErro] = useState();
-
     const handleSubmit = async (e) => {
         e.preventDefault()
-
-        try {
-            const { data } = await axios.post('http://localhost:3000/login', {
-                email: formValues.email,
-                senha: formValues.senha
-            })
-
-            localStorage.setItem("token", data.token)
-            // appContext.setIsAdmin(data.isAdmin)
-            setErro(null);
-            if (data.token)
-                navigate('/home')
-        } catch (err) {
-            setErro(err)
+        const result = await login(formValues, appContext.setError)
+        if(result && result.status === 200) {
+            localStorage.setItem("token", result.data)
+            navigate('/home')
         }
-
     }
 
     const handleChange = (e) => {
@@ -48,6 +36,10 @@ const Login = () => {
             [name]: value,
         });
     };
+
+    useEffect(() => {
+        appContext.setError(null)
+    }, []);
 
     return (
         <>
@@ -71,7 +63,13 @@ const Login = () => {
                     aoAlterar={handleChange}
                     id="senha"
                 />
-                {erro && <Typography variant="body2" sx={{ color: 'error.main', textAlign: 'center', fontWeight: 700 }}>Email ou Senha incorretos!</Typography>}
+                {appContext.error &&
+                    <Typography
+                        variant="body2"
+                        sx={{ color: 'error.main', textAlign: 'center', fontWeight: 700 }}>
+                            {appContext.error.response.data}
+                    </Typography>
+                }
                 <FormBT tipo="submit">Entrar</FormBT>
             </ContainerForm>
             <ContainerLinkCadastrar />

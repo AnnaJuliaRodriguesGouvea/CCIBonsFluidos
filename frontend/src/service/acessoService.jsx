@@ -13,3 +13,17 @@ export async function getIsAdmin(setError) {
         setError(err)
     }
 }
+
+export async function getEntidade(setError) {
+    try {
+        const result =  await axios.get(`http://localhost:3000/api/entidade`, {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem("token")}`,
+            }
+        })
+        setError(null)
+        return result
+    } catch (err) {
+        setError(err)
+    }
+}

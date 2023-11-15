@@ -1,11 +1,15 @@
-import { Box, Button, Paper, Toolbar, Typography } from "@mui/material"
+import {Box, Button, Paper, Toolbar, Typography} from "@mui/material"
 import DadosPessoaFisica from "../DadosPessoaFisica"
-import {useContext, useState} from "react";
+import {useContext, useEffect, useState} from "react";
 import CampoTexto from "../CampoTexto";
 import ModalFeedbackEnvio from "../ModalFeedbackEnvio"
-import { useNavigate } from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 import {AppContext} from "../../commom/context/appContext.jsx";
-import {alteraPF, deletePF} from "../../service/pessoaFisicaService.jsx";
+import {
+    alterarPessoaFisica,
+    deletarPessoaFisica,
+    getPessoaFisicaLogada
+} from "../../service/pessoaFisicaService.jsx";
 
 const formataData = (data) => {
     const dataObjeto = new Date(data);
@@ -14,40 +18,59 @@ const formataData = (data) => {
     const mes = (dataObjeto.getMonth() + 1).toString().padStart(2, "0");
     const dia = (dataObjeto.getDate()).toString().padStart(2, "0");
 
-    const dataFormatada = `${ano}-${mes}-${dia}`;
-
-    return dataFormatada
+    return `${ano}-${mes}-${dia}`
 }
 
 const PerfilPF = () => {
-    const infoPF = {}
     const appContext = useContext(AppContext)
     const navigate = useNavigate();
+    const [open, setOpen] = useState(false);
+    const [formValues, setFormValues] = useState({
+        codigo: "",
+        email: "",
+        senha: "",
+        isAdmin: "",
+        cpf: "",
+        nome: "",
+        dataDeNascimento: ""
+    });
+
+    async function carregaDadosPessoaFisica(){
+        const result = await getPessoaFisicaLogada(appContext.setError)
+        if(result && result.status === 200)
+            setFormValues({
+                codigo: result.data.acesso.codigo,
+                email: result.data.acesso.email,
+                senha: result.data.acesso.senha,
+                isAdmin: result.data.acesso.isAdmin,
+                cpf: result.data.pessoaFisica.cpf,
+                nome: result.data.pessoaFisica.nome,
+                dataDeNascimento: formataData(result.data.pessoaFisica.dataNascimento)
+            })
+    }
+
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => {
+        setOpen(false)
+        navigate(-1)
+    };
 
     const handleSubmit = async (e) => {
-        //TODO - arrumar o alterar para alterar apenas dados de acesso - Anna
+        console.log(formValues)
         e.preventDefault();
-        handleOpen()
-        await alteraPF(formValues, infoPF?.pessoaFisica.codigo)
+        const result = await alterarPessoaFisica(formValues, appContext.setError)
+        if(result && result.status === 200) {
+            handleOpen()
+        }
     }
 
     const handleDelete = async () => {
-        await deletePF(infoPF?.pessoaFisica.codigo)
-        localStorage.clear()
-        navigate('/');
+        const result = await deletarPessoaFisica(formValues?.codigo, appContext.setError)
+        if(result && result.status === 200) {
+            localStorage.clear()
+            navigate('/');
+        }
     }
-
-    const [formValues, setFormValues] = useState({
-        email: infoPF?.acesso.email,
-        senha: infoPF?.acesso.senha,
-        cpf: infoPF?.pessoaFisica.cpf,
-        // TODO - tirar o appContext e pegar do valor carregado da pagina - Anna
-        isAdmin: appContext.isAdmin,
-        nomePF: infoPF?.pessoaFisica.nome,
-        dataDeNascimento: formataData(infoPF?.pessoaFisica.dataNascimento),
-        cnpj: '',
-        razaoSocial: '',
-    });
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -57,9 +80,19 @@ const PerfilPF = () => {
         });
     }
 
-    const [open, setOpen] = useState(false);
-    const handleOpen = () => setOpen(true);
-    const handleClose = () => setOpen(false);
+    useEffect(() => {
+        carregaDadosPessoaFisica()
+    }, []);
+
+    useEffect(() => {
+        let timer;
+        if (open) {
+            timer = setTimeout(() => {
+                handleClose();
+            }, 1500);
+        }
+        return () => clearTimeout(timer);
+    }, [open]);
 
     return (
         <Box
@@ -101,12 +134,12 @@ const PerfilPF = () => {
                 <DadosPessoaFisica
                     CPF={formValues.cpf}
                     handleChangeCPF={handleChange}
-                    NomePF={formValues.nomePF}
+                    NomePF={formValues.nome}
                     handleChangeNomePF={handleChange}
                     DataDeNascimento={formValues.dataDeNascimento}
                     handleChangeDataDeNascimento={handleChange}
                 />
-                {appContext.error && <Typography variant="body2" sx={{ color: 'error.main', textAlign: 'center', fontWeight: 700 }}>{appContext.error.message}</Typography>}
+                {appContext.error && <Typography variant="body2" sx={{ color: 'error.main', textAlign: 'center', fontWeight: 700 }}>{appContext.error.response.data}</Typography>}
                 <Box sx={{ width: '76%', display: 'flex', justifyContent: 'space-between' }}>
                     <Button type="submit" variant="contained">Alterar</Button>
                     {!appContext.error && <ModalFeedbackEnvio open={open} handleClose={handleClose} texto='Cadastro atualizado com sucesso!' />}

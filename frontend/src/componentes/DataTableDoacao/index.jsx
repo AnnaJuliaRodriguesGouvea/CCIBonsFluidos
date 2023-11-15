@@ -85,7 +85,7 @@ const DataTableDoacao = () => {
                                         {formataData(row.data)}
                                     </TableCell>
                                     <TableCell align="right">{row.quantidade}</TableCell>
-                                    <TableCell align="right">{listaTransacoes?.find(opcao => opcao.codigo === row.codigo_transacao).valor}</TableCell>
+                                    <TableCell align="right">{listaTransacoes?.find(opcao => opcao.codigo === row.codigo_transacao)?.valor}</TableCell>
                                     <TableCell align="right">
                                         <Button onClick={() => showModal(row)}>Produto descrição</Button>
                                     </TableCell>

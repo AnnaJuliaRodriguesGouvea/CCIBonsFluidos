@@ -29,6 +29,7 @@ const AdicionaProduto = () => {
         listaFluxos, setListaFluxos,
         listaTamanhos, setListaTamanhos,
     } = useContext(DadosParametrizacao)
+    const navigate = useNavigate();
 
     async function carregaDadosTipoAbsorvente(){
         setListaTiposAbsorventes(await getTiposAbsorvente(appContext.setError))
@@ -47,11 +48,16 @@ const AdicionaProduto = () => {
     }
 
     useEffect(() => {
-        appContext.setError(null)
-        carregaDadosTipoAbsorvente()
-        carregaDadosSuavidade()
-        carregaDadosFluxo()
-        carregaDadosTamanho()
+        if (!localStorage.getItem("token")) {
+            navigate(-1)
+        } else {
+            appContext.setError(null)
+            carregaDadosTipoAbsorvente()
+            carregaDadosSuavidade()
+            carregaDadosFluxo()
+            carregaDadosTamanho()
+        }
+
     }, [])
 
     const [formValues, setFormValues] = useState({
@@ -86,14 +92,13 @@ const AdicionaProduto = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            await adicionarProduto(formValues, appContext.setError);
-            handleOpen()
+            const result = await adicionarProduto(formValues, appContext.setError);
+            if(result.status === 201)
+                handleOpen()
         } catch (err) {
             alert(err)
         }
     };
-
-    const navigate = useNavigate();
 
     const handleVoltar = () => {
         navigate(-1);
@@ -316,7 +321,7 @@ const AdicionaProduto = () => {
                                     })}
                                 </Select>
                             </FormControl>
-                            {appContext.error && <Typography variant="body2" sx={{ color: 'error.main', textAlign: 'center', fontWeight: 700 }}>Todos os campos devem ser preenchidos corretamente!</Typography>}
+                            {appContext.error && <Typography variant="body2" sx={{ color: 'error.main', textAlign: 'center', fontWeight: 700 }}>{appContext.error.response.data}</Typography>}
                             <Button type="submit" variant="contained" color="secondary">
                                 Enviar
                             </Button>

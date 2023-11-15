@@ -1,5 +1,4 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom"
-import { useState } from 'react'
 
 import EstilosGlobais from "./componentes/EstilosGlobais"
 import MainContainer from "./componentes/MainContainer"
@@ -16,15 +15,6 @@ import {AppContextProvider} from "./commom/context/appContext.jsx";
 import {DadosParametrizacaoProvider} from "./commom/context/dadosParametrizacao.jsx";
 
 function AppRoutes() {
-
-  const [selectedIndex, setSelectedIndex] = useState(-1);
-
-  const handleListItemClick = (index) => {
-    setSelectedIndex(index);
-  };
-
-  const data = []
-
   return (
     <>
       <BrowserRouter>
@@ -35,7 +25,7 @@ function AppRoutes() {
               <Route index element={<Login/>} />
               <Route path="cadastrar" element={<Cadastro/>} />
             </Route>
-            <Route path='/home' element={<MainPagePadrao selectedIndex={selectedIndex} setSelectedIndex={setSelectedIndex} aoClickarItemLista={handleListItemClick}/>}>
+            <Route path='/home' element={<MainPagePadrao/>}>
               <Route path='/home/produto' element={<Produto/>}/>
               <Route path='/home/doacao' element={<Doacao/>} />
               <Route path='/home/perfil' element={<Perfil />} />

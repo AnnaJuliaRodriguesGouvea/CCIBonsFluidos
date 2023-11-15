@@ -23,6 +23,13 @@ router.get("/:codigo",
         res.status(response.status).json(response.data)
 })
 
+router.get("/logado/dados",
+    autenticacaoValidator.validarToken,
+    async (req, res) => {
+            const response = await pessoaFisicaService.buscarCodigo(req.codigoLogado)
+            res.status(response.status).json(response.data)
+    })
+
 router.post("/",
     acessoValidator.validaEmail,
     acessoValidator.validaSenha,
@@ -36,8 +43,7 @@ router.post("/",
             false,
             req.body.cpf,
             req.body.nome,
-            req.body.dataNascimento,
-            "PessoaFisica"
+            req.body.dataNascimento
         )
         res.status(response.status).json(response.data)
 })
@@ -57,8 +63,7 @@ router.post("/admin",
             true,
             req.body.cpf,
             req.body.nome,
-            req.body.dataNascimento,
-            "PessoaFisica"
+            req.body.dataNascimento
         )
         res.status(response.status).json(response.data)
 })

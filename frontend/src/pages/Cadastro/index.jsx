@@ -7,15 +7,13 @@ import CampoTexto from "../../componentes/CampoTexto"
 import RadioButton from "../../componentes/RadioButton"
 import Checkbox from "../../componentes/Checkbox"
 import FormBT from "../../componentes/FormBT"
-import axios from "axios"
 import { Typography } from "@mui/material"
 import ModalFeedbackEnvio from "../../componentes/ModalFeedbackEnvio"
-import { formataData } from "../../utils/formataData"
 import {AppContext} from "../../commom/context/appContext.jsx";
 import {getIsAdmin} from "../../service/acessoService.jsx";
 import { useNavigate } from "react-router-dom"
-
-// TODO - Token expirou antes de logar
+import {cadastrarPessoaFisica, cadastrarPessoaFisicaAdmin} from "../../service/pessoaFisicaService.jsx";
+import {cadastrarPessoaJuridica, cadastrarPessoaJuridicaAdmin} from "../../service/pessoaJuridicaService.jsx";
 
 const DivOpcoes = styled.div`
     width: 75%;
@@ -34,100 +32,9 @@ const DivRadioButtons = styled.div`
 const Cadastro = () => {
     const appContext = useContext(AppContext)
     const [isAdmin, setIsAdmin] = useState(false)
-
-    const [entidade, setEntidade] = useState('pf');
-    const [erro, setErro] = useState();
-
     const [open, setOpen] = useState(false);
-
     const navigate = useNavigate()
-
-    async function carregaIsAdmin() {
-        setIsAdmin(await getIsAdmin(appContext.setError))
-    }
-
-    useEffect(() => {
-        carregaIsAdmin()
-    }, [])
-
-    const handleOpen = () => setOpen(true);
-    const handleClose = () => {
-        setOpen(false)
-        navigate(-1)
-    };
-
-    const handleSubmit = async (e) => {
-        e.preventDefault()
-        if (entidade === 'pf') {
-            if (formValues.admin) {
-                try {
-                    await axios.post('http://localhost:3000/api/pessoa-fisica/admin', {
-                        email: formValues.email,
-                        senha: formValues.senha,
-                        cpf: formValues.CPF,
-                        nome: formValues.nomePF,
-                        dataNascimento: formataData(formValues.dataDeNascimento)
-                    }, {
-                        headers: {
-                            'Authorization': `Bearer ${localStorage.getItem("token")}`,
-                        }
-                    })
-                    handleOpen()
-                    setErro(null)
-                } catch (err) {
-                    setErro(err)
-                }
-
-            } else {
-                try {
-                    await axios.post('http://localhost:3000/api/pessoa-fisica', {
-                        email: formValues.email,
-                        senha: formValues.senha,
-                        cpf: formValues.CPF,
-                        nome: formValues.nomePF,
-                        dataNascimento: formataData(formValues.dataDeNascimento)
-                    })
-                    handleOpen()
-                    setErro(null)
-                } catch (err) {
-                    setErro(err)
-                }
-            }
-        } else {
-            if (formValues.admin) {
-                try {
-                    await axios.post('http://localhost:3000/api/pessoa-juridica/admin', {
-                        email: formValues.email,
-                        senha: formValues.senha,
-                        cnpj: formValues.CNPJ,
-                        razaoSocial: formValues.razaoSocial
-                    }, {
-                        headers: {
-                            'Authorization': `Bearer ${localStorage.getItem("token")}`,
-                        }
-                    })
-                    handleOpen()
-                    setErro(null)
-                } catch (err) {
-                    setErro(err)
-                }
-            } else {
-                try {
-                    await axios.post('http://localhost:3000/api/pessoa-juridica', {
-                        email: formValues.email,
-                        senha: formValues.senha,
-                        cnpj: formValues.CNPJ,
-                        razaoSocial: formValues.razaoSocial
-                    })
-                    handleOpen()
-                    setErro(null)
-                } catch (err) {
-                    setErro(err)
-                }
-            }
-        }
-    }
-
+    const [selectedRadioButton, setSelectedRadioButton] = useState('pf');
     const [formValues, setFormValues] = useState({
         email: '',
         senha: '',
@@ -138,6 +45,43 @@ const Cadastro = () => {
         CNPJ: '',
         razaoSocial: '',
     });
+
+    async function carregaIsAdmin() {
+        setIsAdmin(await getIsAdmin(appContext.setError))
+    }
+
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => {
+        setOpen(false)
+        navigate(-1)
+    };
+
+    useEffect(() => {
+        if(localStorage.getItem("token"))
+            carregaIsAdmin()
+        appContext.setError(null)
+    }, [])
+
+
+    const handleSubmit = async (e) => {
+        e.preventDefault()
+        let result = null;
+        if (selectedRadioButton === 'pf') {
+            if (formValues.admin) {
+                result = await cadastrarPessoaFisicaAdmin(formValues, appContext.setError)
+            } else {
+                result = await cadastrarPessoaFisica(formValues, appContext.setError)
+            }
+        } else {
+            if (formValues.admin) {
+                result = await cadastrarPessoaJuridicaAdmin(formValues, appContext.setError)
+            } else {
+                result = await cadastrarPessoaJuridica(formValues, appContext.setError)
+            }
+        }
+        if(result && result.status === 201)
+            handleOpen()
+    }
 
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
@@ -194,42 +138,41 @@ const Cadastro = () => {
                     <DivRadioButtons>
                         <RadioButton
                             label="Pessoa Física:"
-                            valorSelecionado={entidade}
+                            valorSelecionado={selectedRadioButton}
                             valorEsperado="pf"
-                            onchange={setEntidade}
+                            onchange={setSelectedRadioButton}
                             valor="pf"
-                            nome="entidade"
+                            nome="tipo-acesso"
                         />
                         <RadioButton
                             label="Pessoa Jurídica:"
-                            valorSelecionado={entidade}
+                            valorSelecionado={selectedRadioButton}
                             valorEsperado="pj"
-                            onchange={setEntidade}
+                            onchange={setSelectedRadioButton}
                             valor="pj"
-                            nome="entidade"
+                            nome="tipo-acesso"
                         />
                     </DivRadioButtons>
                 </DivOpcoes>
-                {entidade === 'pf' ? <DadosPessoaFisica
-                    CPF={formValues.CPF}
-                    handleChangeCPF={handleChange}
-                    NomePF={formValues.nomePF}
-                    handleChangeNomePF={handleChange}
-                    DataDeNascimento={formValues.dataDeNascimento}
-                    handleChangeDataDeNascimento={handleChange}
-                /> :
+                {selectedRadioButton === 'pf' ?
+                    <DadosPessoaFisica
+                        CPF={formValues.CPF}
+                        handleChangeCPF={handleChange}
+                        NomePF={formValues.nomePF}
+                        handleChangeNomePF={handleChange}
+                        DataDeNascimento={formValues.dataDeNascimento}
+                        handleChangeDataDeNascimento={handleChange}
+                    /> :
                     <DadosPessoaJuridica
                         CNPJ={formValues.CNPJ}
                         handleChangeCNPJ={handleChange}
                         razaoSocial={formValues.razaoSocial}
                         handleChangeRazaoSocial={handleChange}
-                    />}
-                {erro && <Typography variant="body2" sx={{ color: 'error.main', textAlign: 'center', fontWeight: 700 }}>{erro.message}</Typography>}
+                    />
+                }
+                {appContext.error && <Typography variant="body2" sx={{ color: 'error.main', textAlign: 'center', fontWeight: 700 }}>{appContext.error.response.data}</Typography>}
                 <FormBT>Cadastrar</FormBT>
-                {/* TODO - Após exibir o modal depois de 5seg voltar para pagina anterior de adicionar ou alterar - Lemersom
-                    Fazer em todos os componentes que tem modal
-                */}
-                {!erro && <ModalFeedbackEnvio open={open} handleClose={handleClose} texto='Cadastro realizado com sucesso!' />}
+                {!appContext.error && <ModalFeedbackEnvio open={open} handleClose={handleClose} texto='Cadastro realizado com sucesso!' />}
             </ContainerForm>
         </>
     )

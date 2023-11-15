@@ -8,8 +8,7 @@ module.exports = {
         token = token.split('Bearer ')[1]
         jwt.verify(token, process.env.JWT_SECRET, (err, payload) => {
             if (err) {
-                console.log(err)
-                res.status(403).json({status: false, msg: "Acesso negado - Token invalido"})
+                res.status(403).json("Acesso negado - Token invalido")
                 return
             }
             req.codigoLogado = payload.codigoLogado
