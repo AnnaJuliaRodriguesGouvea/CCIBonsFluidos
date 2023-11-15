@@ -57,6 +57,7 @@ const Cadastro = () => {
     };
 
     useEffect(() => {
+        setIsAdmin(false)
         if(localStorage.getItem("token"))
             carregaIsAdmin()
         appContext.setError(null)

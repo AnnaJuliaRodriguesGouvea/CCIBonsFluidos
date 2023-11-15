@@ -10,7 +10,7 @@ const PessoaJuridicaModel = sequelize.define('PessoaJuridica',
             allowNull: false
         },
         cnpj: {
-            type: DataTypes.STRING(14),
+            type: DataTypes.STRING(18),
             allowNull: false
         },
         razaoSocial: {

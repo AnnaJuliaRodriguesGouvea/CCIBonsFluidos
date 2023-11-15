@@ -38,6 +38,7 @@ const Login = () => {
     };
 
     useEffect(() => {
+        localStorage.clear()
         appContext.setError(null)
     }, []);
 
