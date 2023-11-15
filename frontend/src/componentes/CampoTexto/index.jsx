@@ -6,6 +6,10 @@ const Container = styled.div`
     height: 100%;
     display: flex;
     flex-direction: column;
+
+    @media screen and (max-width: 950px) {
+            width: 100%;
+      }
 `
 
 const Campo = styled.input`
@@ -24,7 +28,7 @@ const Rotulo = styled.label`
     font-size: 20px;
     font-weight: 500;
     line-height: 16px;
-    margin-top: 1em;
+    margin-top: 0.5em;
 `
 
 const CampoTexto = memo(({ label, nome, tipo, valor, placeholder, aoAlterar, id }) => {

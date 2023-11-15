@@ -8,8 +8,14 @@ const Botao = styled.button`
     background-color: rgb(251, 94, 130);
     color: #FFFFFF;
     font-size: 28px;
-    margin-top: 1em;
+    margin-top: 0.5em;
     cursor: pointer;
+
+    @media screen and (max-width: 950px) {
+        width: 70%;
+        height: 10%;
+        font-size: 18px
+      }
 `
 
 const FormBT = ({ children, tipo }) => {

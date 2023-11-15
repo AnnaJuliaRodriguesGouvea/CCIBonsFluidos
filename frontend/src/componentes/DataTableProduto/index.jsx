@@ -102,22 +102,22 @@ const DataTableProduto = () => {
     return (
         <>
             <TableContainer component={Paper}>
-                <Table sx={{ minWidth: 650 }}>
+                <Table sx={{ minWidth: 650}}>
                     <TableHead>
                         <TableRow>
                             <TableCell>Marca</TableCell>
-                            <TableCell align="right">Nome</TableCell>
-                            <TableCell align="right">Tem aba</TableCell>
-                            <TableCell align="right">É noturno</TableCell>
-                            <TableCell align="right">Tem Escape de urina</TableCell>
-                            <TableCell align="right">Quantidade no Pacote</TableCell>
-                            <TableCell align="right">Quantidade de Pacote</TableCell>
-                            <TableCell align="right">Tipo de absorvente</TableCell>
-                            <TableCell align="right">Suavidade</TableCell>
-                            <TableCell align="right">Fluxo</TableCell>
-                            <TableCell align="right">Tamanho</TableCell>
-                            <TableCell align="right" />
-                            <TableCell align="right" />
+                            <TableCell align="center">Nome</TableCell>
+                            <TableCell align="center">Tem aba</TableCell>
+                            <TableCell align="center">É noturno</TableCell>
+                            <TableCell align="center">Tem Escape de urina</TableCell>
+                            <TableCell align="center">Quantidade no Pacote</TableCell>
+                            <TableCell align="center">Quantidade de Pacote</TableCell>
+                            <TableCell align="center">Tipo de absorvente</TableCell>
+                            <TableCell align="center">Suavidade</TableCell>
+                            <TableCell align="center">Fluxo</TableCell>
+                            <TableCell align="center">Tamanho</TableCell>
+                            <TableCell align="center" />
+                            <TableCell align="center" />
                         </TableRow>
                     </TableHead>
                     <TableBody>

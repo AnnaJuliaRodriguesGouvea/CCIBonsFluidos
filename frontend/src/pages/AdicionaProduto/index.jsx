@@ -126,7 +126,7 @@ const AdicionaProduto = () => {
                     noValidate
                     onSubmit={handleSubmit}
                     sx={{
-                        height: '90vh',
+                        height: '100vh',
                         width: '100%',
                         display: 'flex',
                         justifyContent: 'center',
@@ -144,7 +144,15 @@ const AdicionaProduto = () => {
                             display: 'flex',
                             flexDirection: 'column',
                             borderRadius: '10px',
-                            position: "fixed"
+                            position: "fixed",
+                            overflowY: 'auto',
+                            scrollbarWidth: 'thin',
+                            '&::-webkit-scrollbar': {
+                                width: '5px',
+                            },
+                            '&::-webkit-scrollbar-thumb': {
+                                backgroundColor: '#b2b2b2',
+                            },
                         }}
                     >
                         <Box>

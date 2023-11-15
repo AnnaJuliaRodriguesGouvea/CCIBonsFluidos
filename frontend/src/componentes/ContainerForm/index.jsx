@@ -4,7 +4,7 @@ import styled from "styled-components";
 const Container = styled.section`
         background-color: rgba(255 255 255 / 35%);
         width: 900px;
-        height: ${props => props.$altura ? props.$altura : '590px'};
+        height: ${props => props.$altura ? props.$altura : '60%'};
         margin: 5% auto;
         display: flex;
         position: relative;
@@ -12,6 +12,16 @@ const Container = styled.section`
         align-items: center;
         border-radius: 25px;
         border: 2px solid rgba(255, 255, 255, 80%);
+
+        @media screen and (max-width: 950px) {
+            margin:5% 10% 8% 10%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 70%;
+            width: 80%;
+      }
 `
 
 const BotaoVoltar = styled.button`
@@ -31,19 +41,19 @@ const BotaoVoltar = styled.button`
 const Formulario = styled.form`
     display: flex;
     flex-direction: column;
+    justify-content: center;
     align-items: center;
-    height: 80%;
     width: ${props => props.$largura ? props.$largura : '75%'};
 `
 
-const ContainerForm = ({ children, $altura ,$largura, botaoVoltar = false, handleSubmit}) => {
+const ContainerForm = ({ children, $altura, $largura, botaoVoltar = false, handleSubmit }) => {
 
     const navigate = useNavigate();
 
     return (
         <Container $altura={$altura}>
             {botaoVoltar && <BotaoVoltar onClick={() => navigate(-1)}>{'<'}</BotaoVoltar>}
-            <Formulario $largura={$largura} onSubmit={(e)=>handleSubmit(e)}>
+            <Formulario $largura={$largura} onSubmit={(e) => handleSubmit(e)}>
                 {children}
             </Formulario>
         </Container>

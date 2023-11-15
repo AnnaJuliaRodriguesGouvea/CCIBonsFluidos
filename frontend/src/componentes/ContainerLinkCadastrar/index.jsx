@@ -1,5 +1,4 @@
 import styled from "styled-components"
-import Texto from "../Texto"
 import { Link } from "react-router-dom"
 
 const ContainerCadastrar = styled.section`
@@ -8,6 +7,11 @@ const ContainerCadastrar = styled.section`
     height: 120px;
     margin: 5% auto;
     border-radius: 25px;
+
+    @media screen and (max-width: 950px) {
+        width: 80%;
+        margin: 0 10%;
+      }
 `
 
 const Span = styled.span`
@@ -19,6 +23,15 @@ const Span = styled.span`
     align-items: center;
 `
 
+const Texto = styled.p`
+    color: rgb(251, 94, 130);
+    font-size: 32px;
+
+    @media screen and (max-width: 950px) {
+        font-size: 18px;
+      }
+`
+
 const LinkEstilizado = styled(Link)`
     text-decoration: none;
 `
@@ -27,9 +40,9 @@ const ContainerLinkCadastrar = () => {
     return (
         <ContainerCadastrar>
             <Span>
-                <Texto $tamanho="32px">Não possui uma conta?</Texto>
+                <Texto>Não possui uma conta?</Texto>
                 <LinkEstilizado to={'/cadastrar'}>
-                    <Texto $tamanho="32px">Cadastre-se</Texto>
+                    <Texto>Cadastre-se</Texto>
                 </LinkEstilizado>
             </Span>
         </ContainerCadastrar>

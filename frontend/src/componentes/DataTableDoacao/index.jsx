@@ -68,10 +68,10 @@ const DataTableDoacao = () => {
                     <TableHead>
                         <TableRow>
                             <TableCell>Data</TableCell>
-                            <TableCell align="right">Quantidade</TableCell>
-                            <TableCell align="right">Transação</TableCell>
-                            <TableCell align="right">Produto</TableCell>
-                            <TableCell align="right">Instituição</TableCell>
+                            <TableCell align="center">Quantidade</TableCell>
+                            <TableCell align="center">Transação</TableCell>
+                            <TableCell align="center">Produto</TableCell>
+                            <TableCell align="center">Instituição</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>

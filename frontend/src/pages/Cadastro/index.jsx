@@ -166,7 +166,7 @@ const Cadastro = () => {
 
     return (
         <>
-            <ContainerForm $altura='820px' $largura='100%' botaoVoltar={true} handleSubmit={handleSubmit}>
+            <ContainerForm $altura='630px' $largura='100%' botaoVoltar={true} handleSubmit={handleSubmit}>
                 <CampoTexto
                     label="Email"
                     nome="email"
