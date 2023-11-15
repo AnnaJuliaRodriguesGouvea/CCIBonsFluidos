@@ -11,8 +11,7 @@ import {
     getFluxo,
     getSuavidade,
     getTamanho,
-    getTiposAbsorvente,
-    getTransacao
+    getTiposAbsorvente
 } from "../../service/parametrizacaoService.jsx";
 
 const Div = styled.div`

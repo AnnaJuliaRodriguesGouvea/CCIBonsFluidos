@@ -2,6 +2,7 @@ const pessoaJuridicaDao = require("../DAO/pessoa-juridica-dao")
 const AcessoModel = require("../model/Acesso")
 const PessoaJuridicaModel = require("../model/PessoaJuridica")
 const acessoService = require("../service/acesso-service")
+const produtoDao = require("../DAO/produto-dao");
 
 async function atualizarDadosPessoaJuridica(codigo, cnpj, razaoSocial) {
     return await pessoaJuridicaDao.atualizar(codigo, cnpj, razaoSocial)
@@ -30,6 +31,16 @@ module.exports = {
             if(pessoasJuridicas.rows.length > 0)
                 return {status: 200, data: pessoasJuridicas}
             return {status: 204, data: "Não possui dados suficientes para essa página com esse limite"}
+        }
+        return {status: 500, data: "Desculpe, não foi possível realizar essa pesquisa"}
+    },
+
+    listarTodasPessoaJuridica: async function(substring) {
+        const pessoasJuridicas = await pessoaJuridicaDao.listarTodas(substring)
+        if (pessoasJuridicas) {
+            if(pessoasJuridicas.length > 0)
+                return {status: 200, data: pessoasJuridicas}
+            return {status: 204, data: "Não possui dados suficientes"}
         }
         return {status: 500, data: "Desculpe, não foi possível realizar essa pesquisa"}
     },

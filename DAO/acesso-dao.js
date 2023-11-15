@@ -47,7 +47,6 @@ module.exports = {
     },
 
     getByEmail: async function(email) {
-        console.log(email)
         return await AcessoModel.findOne({ where: { email: email.toLowerCase() } })
     }
 }

@@ -1,8 +1,7 @@
 import { Box, Button, TextField, Modal, Typography, FormControlLabel, Checkbox, FormControl, InputLabel, Select, MenuItem } from "@mui/material";
-import { ModeEdit } from "@mui/icons-material";
 import {useContext, useEffect, useState} from "react";
 import ModalFeedbackEnvio from "../ModalFeedbackEnvio";
-import {alteraProduto, listarProdutos} from "../../service/produtoService.jsx";
+import {alteraProduto} from "../../service/produtoService.jsx";
 import {AppContext} from "../../commom/context/appContext.jsx";
 import {DadosParametrizacao} from "../../commom/context/dadosParametrizacao.jsx";
 import {getFluxo, getSuavidade, getTamanho, getTiposAbsorvente} from "../../service/parametrizacaoService.jsx";

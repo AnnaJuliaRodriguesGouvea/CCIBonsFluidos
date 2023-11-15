@@ -1,6 +1,6 @@
 import { AppBar, Box, Button, Container, CssBaseline, Popover, Toolbar, Typography } from "@mui/material";
 import SideMenu from "../../componentes/SideMenu";
-import { Link, Outlet, useNavigate } from "react-router-dom";
+import { Link, Outlet } from "react-router-dom";
 import { useEffect, useState } from "react";
 import styled from "@emotion/styled";
 

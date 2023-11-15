@@ -15,6 +15,13 @@ router.get("/",
         res.status(response.status).json(response.data)
 })
 
+router.get("/:substring",
+    autenticacaoValidator.validarToken,
+    async (req, res) => {
+            const response = await pessoaJuridicaService.listarTodasPessoaJuridica(req.params.substring)
+            res.status(response.status).json(response.data)
+    })
+
 router.get("/:codigo",
     autenticacaoValidator.validarToken,
     acessoValidator.validaCodigo,

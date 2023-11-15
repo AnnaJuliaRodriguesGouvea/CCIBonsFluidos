@@ -8,7 +8,6 @@ export async function getIsAdmin(setError) {
             }
         })
         setError(null)
-        console.log(result.data)
         return result.data
     } catch (err) {
         setError(err)

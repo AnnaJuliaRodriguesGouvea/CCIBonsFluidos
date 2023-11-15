@@ -15,6 +15,13 @@ router.get("/",
         res.status(response.status).json(response.data)
 })
 
+router.get("/com-estoque/:substring",
+    autenticacaoValidator.validarToken,
+    async (req, res) => {
+            const response = await productService.productsListWithStock(req.params.substring)
+            res.status(response.status).json(response.data)
+    })
+
 router.get("/:codigo",
     autenticacaoValidator.validarToken,
     acessoValidator.validaCodigo,

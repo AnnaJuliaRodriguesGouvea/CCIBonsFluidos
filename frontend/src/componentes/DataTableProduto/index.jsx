@@ -10,21 +10,18 @@ import {
     Typography
 } from "@mui/material"
 import ModalEdicaoProduto from "../ModalEdicaoProduto"
-import ModalExcluirProduto from "../ModalExcluirProduto/index.jsx";
 import {useContext, useEffect, useState} from "react";
 import {DadosParametrizacao} from "../../commom/context/dadosParametrizacao.jsx";
 import {
     getFluxo,
     getSuavidade,
     getTamanho,
-    getTiposAbsorvente,
-    getTransacao
+    getTiposAbsorvente
 } from "../../service/parametrizacaoService.jsx";
 import {AppContext} from "../../commom/context/appContext.jsx";
 import {deletaProduto, listarProdutos} from "../../service/produtoService.jsx";
 import {getIsAdmin} from "../../service/acessoService.jsx";
 import {ModeEdit} from "@mui/icons-material";
-import {createPortal} from "react-dom";
 
 const DataTableProduto = () => {
     const appContext = useContext(AppContext)

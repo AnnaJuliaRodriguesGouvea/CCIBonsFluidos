@@ -17,6 +17,7 @@ export async function adicionarDoacao(novaDoacao, setError) {
         })
         setError(null);
     } catch (err) {
+        console.log(err)
         setError(err);
     }
 }
@@ -28,10 +29,8 @@ export async function listarDoacoes(limit, page, setError) {
                 'Authorization': `Bearer ${localStorage.getItem("token")}`,
             }
         })
-
-        console.log(result)
         setError(null)
-        return result.data
+        return result
     } catch (err) {
         setError(err);
     }

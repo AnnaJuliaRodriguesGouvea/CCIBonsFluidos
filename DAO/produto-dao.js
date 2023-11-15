@@ -1,4 +1,5 @@
 const ProdutoModel = require("../model/Produto.js")
+const {Op} = require("sequelize");
 
 module.exports = {
     listar: async function(limite, pagina) {
@@ -8,6 +9,17 @@ module.exports = {
             },
             limit: limite,
             offset: (pagina - 1) * limite
+        })
+        return produtos
+    },
+
+    listarComEstoque: async function(substring) {
+        const produtos = await ProdutoModel.findAll({
+            where: {
+                isExcluido: false,
+                quantidadeDePacote: { [Op.gt]: 0 },
+                nome: { [Op.iLike]: `%${substring}%` }
+            }
         })
         return produtos
     },

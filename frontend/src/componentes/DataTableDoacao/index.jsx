@@ -13,13 +13,10 @@ import {
 import ModalDadosProduto from "../ModalDadoProdutos"
 import { formataData } from "../../utils/formataData"
 import {useContext, useEffect, useState} from "react"
-import { useDadosPessoaJuridica } from "../../commom/context/dadosPessoaJuridica"
 import {AppContext} from "../../commom/context/appContext.jsx";
 import {DadosParametrizacao} from "../../commom/context/dadosParametrizacao.jsx";
-import {getTiposAbsorvente, getTransacao} from "../../service/parametrizacaoService.jsx";
-import {listarProdutos} from "../../service/produtoService.jsx";
-import {listarDoacoes} from "../../service/doacaoService.js";
-import ModalEdicaoProduto from "../ModalEdicaoProduto/index.jsx";
+import {getTransacao} from "../../service/parametrizacaoService.jsx";
+import {listarDoacoes} from "../../service/doacaoService.jsx";
 
 const DataTableDoacao = () => {
     const appContext = useContext(AppContext)
@@ -47,8 +44,8 @@ const DataTableDoacao = () => {
     async function carregaDoacoes() {
         const result = await listarDoacoes(limit, page, appContext.setError)
         if (result.status == 200) {
-            setListaDoacoes(result)
-            setPageCount(Math.ceil(result.count / limit))
+            setListaDoacoes(result.data)
+            setPageCount(Math.ceil(result.data.count / limit))
         }
     }
 
@@ -61,21 +58,8 @@ const DataTableDoacao = () => {
     }, [page])
 
     useEffect(() => {
-        carregaDadosTransacao()
+        carregaDoacoes()
     }, [isModalVisible])
-
-    const { pessoasJuridicas, listaPessoasJuridicas } = useDadosPessoaJuridica()
-    async function carregaListaPessoasJuridicas(limit, page) {
-        return await listaPessoasJuridicas(limit, page)
-    }
-
-    useEffect(() => {
-        const fetchData = async () => {
-            await carregaListaPessoasJuridicas(30, 1)
-        }
-
-        fetchData()
-    }, [])
 
     return (
         <>
@@ -92,7 +76,7 @@ const DataTableDoacao = () => {
                     </TableHead>
                     <TableBody>
                         {
-                            listaDoacoes && listaDoacoes.rows ? doacoes.map((row) => (
+                            listaDoacoes && listaDoacoes.rows ? listaDoacoes.rows.map((row) => (
                                 <TableRow
                                     key={row.codigo}
                                     sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
@@ -104,18 +88,8 @@ const DataTableDoacao = () => {
                                     <TableCell align="right">{listaTransacoes?.find(opcao => opcao.codigo === row.codigo_transacao).valor}</TableCell>
                                     <TableCell align="right">
                                         <Button onClick={() => showModal(row)}>Produto descrição</Button>
-                                        {/*<BotaoDadoProduto codigoProduto={row.codigo_produto} selectMenuItems={selectMenuItems} />*/}
                                     </TableCell>
-                                    <TableCell align="right">
-                                        {/* FEITO - TODO - está pegando todas as pessoas juridicas ao invez da relacionada a tabela*/}
-                                        {pessoasJuridicas ?
-                                            pessoasJuridicas
-                                                .filter(pj => pj.codigo === row.cnpj_destino)
-                                                .map(pj => String(pj.razaoSocial))
-                                            :
-                                            'Não há pessoas jurídicas cadastradas'
-                                        }
-                                    </TableCell>
+                                    <TableCell align="right">{row.PessoaJuridica.razaoSocial}</TableCell>
                                 </TableRow>
                             )) : <TableRow>
                                 <TableCell colSpan={11}>

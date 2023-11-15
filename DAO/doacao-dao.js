@@ -1,10 +1,17 @@
 const DoacaoModel = require("../model/Doacao.js")
+const PessoaJuridicaModel = require("../model/PessoaJuridica");
 
 module.exports = {
     listar: async function(limite, pagina) {
         const doacoes = await DoacaoModel.findAndCountAll({
             limit: limite,
-            offset: (pagina - 1) * limite
+            offset: (pagina - 1) * limite,
+            include: [
+                {
+                    model: PessoaJuridicaModel,
+                    attributes: ['razaoSocial']
+                },
+            ],
         })
         return doacoes
     },

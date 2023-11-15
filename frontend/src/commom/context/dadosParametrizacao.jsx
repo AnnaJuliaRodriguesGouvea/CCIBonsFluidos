@@ -1,4 +1,4 @@
-import {createContext, useContext, useState} from "react";
+import {createContext, useState} from "react";
 
 export const DadosParametrizacao = createContext();
 DadosParametrizacao.displayName = "Dados de Parametrização";

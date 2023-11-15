@@ -1,7 +1,5 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom"
-import { useEffect, useState } from 'react'
-
-import { DadosPessoaJuridicaProvider } from "./commom/context/dadosPessoaJuridica.jsx"
+import { useState } from 'react'
 
 import EstilosGlobais from "./componentes/EstilosGlobais"
 import MainContainer from "./componentes/MainContainer"
@@ -32,26 +30,28 @@ function AppRoutes() {
       <BrowserRouter>
         <EstilosGlobais />
         <AppContextProvider>
-          <DadosPessoaJuridicaProvider>
-            <Routes>
-              <Route path="/" element={<MainContainer />}>
-                <Route index element={<Login/>} />
-                <Route path="cadastrar" element={<Cadastro/>} />
-              </Route>
-              <Route path='/home' element={<MainPagePadrao selectedIndex={selectedIndex} setSelectedIndex={setSelectedIndex} aoClickarItemLista={handleListItemClick}/>}>
-                <Route path='/home/produto' element={<Produto/>}/>
-                <Route path='/home/doacao' element={<Doacao/>} />
-                <Route path='/home/perfil' element={<Perfil />} />
-              </Route>
-              <Route path='/adicionaProduto' element={
-                <DadosParametrizacaoProvider>
-                  <AdicionaProduto/>
-                </DadosParametrizacaoProvider>
-              } />
-              <Route path='/AdicionaDoacao' element={<AdicionaDoacao selectMenuItems={data} />} />
-              <Route path="*" element={<Alert severity="error">Error 404: Page not found</Alert>} />
-            </Routes>
-          </ DadosPessoaJuridicaProvider>
+          <Routes>
+            <Route path="/" element={<MainContainer />}>
+              <Route index element={<Login/>} />
+              <Route path="cadastrar" element={<Cadastro/>} />
+            </Route>
+            <Route path='/home' element={<MainPagePadrao selectedIndex={selectedIndex} setSelectedIndex={setSelectedIndex} aoClickarItemLista={handleListItemClick}/>}>
+              <Route path='/home/produto' element={<Produto/>}/>
+              <Route path='/home/doacao' element={<Doacao/>} />
+              <Route path='/home/perfil' element={<Perfil />} />
+            </Route>
+            <Route path='/adicionaProduto' element={
+              <DadosParametrizacaoProvider>
+                <AdicionaProduto/>
+              </DadosParametrizacaoProvider>
+            } />
+            <Route path='/AdicionaDoacao' element={
+              <DadosParametrizacaoProvider>
+                <AdicionaDoacao/>
+              </DadosParametrizacaoProvider>
+              }/>
+            <Route path="*" element={<Alert severity="error">Error 404: Page not found</Alert>} />
+          </Routes>
         </AppContextProvider>
       </BrowserRouter >
     </>

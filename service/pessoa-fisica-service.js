@@ -69,7 +69,6 @@ module.exports = {
             }
             return {status: 403, data: "Você não possui permissão para alterar dados de outra conta"}
         } else {
-            console.log(acessoResponse)
             return acessoResponse;
         }
     },

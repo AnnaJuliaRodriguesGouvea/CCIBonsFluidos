@@ -1,12 +1,11 @@
 import {useContext, useEffect, useState} from "react"
-import { Box, Button, Divider, Modal, Typography } from "@mui/material";
-import {listarProdutos, listaUmProduto} from "../../service/produtoService.jsx";
+import { Box, Divider, Modal, Typography } from "@mui/material";
+import {listaUmProduto} from "../../service/produtoService.jsx";
 import {
     getFluxo,
     getSuavidade,
     getTamanho,
-    getTiposAbsorvente,
-    getTransacao
+    getTiposAbsorvente
 } from "../../service/parametrizacaoService.jsx";
 import {AppContext} from "../../commom/context/appContext.jsx";
 import {DadosParametrizacao} from "../../commom/context/dadosParametrizacao.jsx";
@@ -34,6 +33,7 @@ const ModalDadosProduto = ({ dadosProduto, visible, closeModal }) => {
         fluxo: "",
         tamanho: "",
     });
+    const [produto, setProduto] = useState({})
 
     async function carregaDadosTipoAbsorvente(){
         setListaTiposAbsorventes(await getTiposAbsorvente(appContext.setError))
@@ -51,21 +51,27 @@ const ModalDadosProduto = ({ dadosProduto, visible, closeModal }) => {
         setListaTamanhos(await getTamanho(appContext.setError))
     }
 
-    useEffect(() => {
+    async function carregaProduto() {
+        const result = await listaUmProduto(dadosProduto.codigo_produto, appContext.setError)
+
         setFormValues({
-            codigo: dadosProduto.codigo_produto,
-            marca: dadosProduto.marca,
-            nome: dadosProduto.nome,
-            temAba: dadosProduto.temAbas,
-            ehNoturno: dadosProduto.isNoturno,
-            temEscapeDeUrina: dadosProduto.temEscapeUrina,
-            quantidadeNoPacote: dadosProduto.quantidadeNoPacote,
-            quantidadeDePacote: dadosProduto.quantidadeDePacote,
-            tipoDeAbsorvente: dadosProduto.codigo_tipo_absorvente,
-            suavidade: dadosProduto.codigo_suavidade,
-            fluxo: dadosProduto.codigo_fluxo,
-            tamanho: dadosProduto.codigo_tamanho,
+            codigo: result.codigo,
+            marca: result.marca,
+            nome: result.nome,
+            temAba: result.temAbas,
+            ehNoturno: result.isNoturno,
+            temEscapeDeUrina: result.temEscapeUrina,
+            quantidadeNoPacote: result.quantidadeNoPacote,
+            quantidadeDePacote: result.quantidadeDePacote,
+            tipoDeAbsorvente: result.codigo_tipo_absorvente,
+            suavidade: result.codigo_suavidade,
+            fluxo: result.codigo_fluxo,
+            tamanho: result.codigo_tamanho,
         })
+    }
+
+    useEffect(() => {
+        carregaProduto()
     }, [dadosProduto])
 
     useEffect(() => {
@@ -111,25 +117,25 @@ const ModalDadosProduto = ({ dadosProduto, visible, closeModal }) => {
                             display: 'flex',
                             justifyContent: 'space-between'
                         }}>
-                            <Typography variant="body"><strong>Marca</strong>: {dadosProduto?.marca}</Typography>
-                            <Typography variant="body"><strong>Nome</strong>: {dadosProduto?.nome}</Typography>
+                            <Typography variant="body"><strong>Marca</strong>: {formValues?.marca}</Typography>
+                            <Typography variant="body"><strong>Nome</strong>: {formValues?.nome}</Typography>
                         </Box>
                         <Divider />
                         <Box sx={{
                             display: 'flex',
                             justifyContent: 'space-between'
                         }}>
-                            <Typography variant="body"><strong>Abas</strong>: {dadosProduto?.temAbas ? "Sim" : "Não"}</Typography>
-                            <Typography variant="body"><strong>É noturno</strong>: {dadosProduto?.isNoturno ? "Sim" : "Não"}</Typography>
-                            <Typography variant="body"><strong>Escape de Urina</strong>: {dadosProduto?.temEscapeUrina ? "Sim" : "Não"}</Typography>
+                            <Typography variant="body"><strong>Abas</strong>: {formValues?.temAbas ? "Sim" : "Não"}</Typography>
+                            <Typography variant="body"><strong>É noturno</strong>: {formValues?.isNoturno ? "Sim" : "Não"}</Typography>
+                            <Typography variant="body"><strong>Escape de Urina</strong>: {formValues?.temEscapeUrina ? "Sim" : "Não"}</Typography>
                         </Box>
                         <Divider />
                         <Box sx={{
                             display: 'flex',
                             justifyContent: 'space-between'
                         }}>
-                            <Typography variant="body"><strong>Quantidade no Pacote</strong>: {String(dadosProduto?.quantidadeNoPacote)}</Typography>
-                            <Typography variant="body"><strong>Quantidade de Pacote</strong>: {String(dadosProduto?.quantidadeDePacote)}</Typography>
+                            <Typography variant="body"><strong>Quantidade no Pacote</strong>: {String(formValues?.quantidadeNoPacote)}</Typography>
+                            <Typography variant="body"><strong>Quantidade de Pacote</strong>: {String(formValues?.quantidadeDePacote)}</Typography>
                         </Box>
                         <Divider />
                         <Box sx={{
@@ -139,13 +145,13 @@ const ModalDadosProduto = ({ dadosProduto, visible, closeModal }) => {
                             gap: '16px'
                         }}>
                             <Typography variant="body"><strong>Tipo do Absorvente</strong>: {
-                                dadosProduto ? listaTiposAbsorventes?.find(tipoAbsorvente => tipoAbsorvente.codigo === dadosProduto.codigo_tipo_absorvente).valor : 'NÃO INFORMADO'}</Typography>
+                                formValues ? listaTiposAbsorventes?.find(tipoAbsorvente => tipoAbsorvente.codigo === formValues.tipoDeAbsorvente)?.valor : 'NÃO INFORMADO'}</Typography>
                             <Typography variant="body"><strong>Suavidade</strong>: {
-                                dadosProduto ? listaSuavidades?.find(suavidade => suavidade.codigo === dadosProduto.codigo_suavidade).valor : 'NÃO INFORMADO'}</Typography>
+                                formValues ? listaSuavidades?.find(suavidade => suavidade.codigo === formValues.suavidade)?.valor : 'NÃO INFORMADO'}</Typography>
                             <Typography variant="body"><strong>Fluxo</strong>: {
-                                dadosProduto ? listaFluxos?.find(fluxo => fluxo.codigo === dadosProduto?.codigo_fluxo).valor : 'NÃO INFORMADO'}</Typography>
+                                formValues ? listaFluxos?.find(fluxo => fluxo.codigo === formValues?.fluxo)?.valor : 'NÃO INFORMADO'}</Typography>
                             <Typography variant="body"><strong>Tamanho</strong>: {
-                                dadosProduto ? listaTamanhos?.find(tamanho => tamanho.codigo === dadosProduto?.codigo_tamanho).valor : 'NÃO INFORMADO'}</Typography>
+                                formValues ? listaTamanhos?.find(tamanho => tamanho.codigo === formValues?.tamanho)?.valor : 'NÃO INFORMADO'}</Typography>
                         </Box>
                     </Box>
                 </Box>

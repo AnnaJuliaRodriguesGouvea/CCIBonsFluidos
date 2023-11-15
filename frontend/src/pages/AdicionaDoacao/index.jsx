@@ -1,12 +1,15 @@
 import styled from "@emotion/styled"
 import { ArrowBack } from "@mui/icons-material"
-import { Autocomplete, Box, Button, Container, CssBaseline, FormControl, FormControlLabel, Grid, IconButton, InputLabel, MenuItem, Paper, Select, TextField, Typography } from "@mui/material"
-import { useEffect, useState } from "react"
+import { Autocomplete, Box, Button, Container, CssBaseline, FormControl, Grid, IconButton, InputLabel, MenuItem, Paper, Select, TextField, Typography } from "@mui/material"
+import {useContext, useEffect, useState} from "react"
 import { useNavigate } from "react-router-dom"
-import { useDadosDoacaoContext } from "../../commom/context/dadosDoacao"
 import ModalFeedbackEnvio from "../../componentes/ModalFeedbackEnvio"
-import { useDadosPessoaJuridica } from "../../commom/context/dadosPessoaJuridica"
-import { listarProdutos } from "../../service/produtoService.jsx";
+import {listarProdutosComEstoque} from "../../service/produtoService.jsx";
+import {AppContext} from "../../commom/context/appContext.jsx";
+import {adicionarDoacao} from "../../service/doacaoService.jsx";
+import {listarTodasPessoasJuridicas} from "../../service/pessoaJuridicaService.jsx";
+import {DadosParametrizacao} from "../../commom/context/dadosParametrizacao.jsx";
+import {getTransacao} from "../../service/parametrizacaoService.jsx";
 
 const Div = styled.div`
     width: 100vw;
@@ -16,30 +19,12 @@ const Div = styled.div`
 `
 
 const AdicionaDoacao = ({ selectMenuItems }) => {
-    const [rows, setRows] = useState([])
-    const { adicionarDoacao, erro, setErro } = useDadosDoacaoContext()
-    const { pessoasJuridicas, listaPessoasJuridicas } = useDadosPessoaJuridica()
-
-    useEffect(() => {
-        setErro(null)
-    }, [])
-
-    async function carregaListaDeProdutos(limit, page) {
-        // FEITO - TODO - buscar produto a partir da string digitada pelo usuario:
-        // EXE: produto Intimus, usuario digita imus e ele traz todos os produtos com substring imus - Lemersom (apenas o front)
-        setRows(await listarProdutos(limit, page).rows)
-    }
-
-    async function carregaListaPessoasJuridicas(limit, page) {
-        // FEITO - TODO - Arrumar para ao inves de usar cnpj usar nome fantasia e fazer o mesmo comportamento de produtos - Lemersom
-        return await listaPessoasJuridicas(limit, page)
-    }
-
-    useEffect(() => {
-        carregaListaDeProdutos(30, 1)
-        carregaListaPessoasJuridicas(30, 1)
-    }, [])
-
+    const appContext = useContext(AppContext)
+    const navigate = useNavigate();
+    const {listaTransacoes, setListaTransacoes} = useContext(DadosParametrizacao)
+    const [listaProdutos, setListaProdutos] = useState([])
+    const [listaPessoaJuridica, setListaPessoaJuridica] = useState([])
+    const [openModel, setOpenModal] = useState(false);
     const [formValues, setFormValues] = useState({
         data: '',
         quantidade: '',
@@ -48,9 +33,25 @@ const AdicionaDoacao = ({ selectMenuItems }) => {
         cnpj_destino: '',
     });
 
+    async function carregaListaDeProdutos(substring) {
+        const result = await listarProdutosComEstoque(substring, appContext.setError)
+        if(result.status === 200) {
+            setListaProdutos(result.data)
+        }
+    }
+
+    async function carregaListaPessoasJuridicas(substring) {
+        const result = await listarTodasPessoasJuridicas(substring, appContext.setError)
+        if(result.status === 200) {
+            setListaPessoaJuridica(result.data)
+        }
+    }
+
+    async function carregaDadosTransacao(){
+        setListaTransacoes(await getTransacao(appContext.setError))
+    }
+
     const handleInputChange = (e) => {
-        //TODO - Criar nova rota no backend para trazer todos os produtos que estoque > 0 e a rota recebe o parametros
-        // "apenasNaoExcluidos" - Anna
         const { name, value, type, checked } = e.target;
         if (type === 'checkbox') {
             setFormValues({
@@ -68,35 +69,36 @@ const AdicionaDoacao = ({ selectMenuItems }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            await adicionarDoacao(formValues);
-            handleOpen()
+            await adicionarDoacao(formValues, appContext.setError);
+            handleOpenModal()
         } catch (err) {
             alert(err)
         }
     };
 
-    const navigate = useNavigate();
-
     const handleVoltar = () => {
         navigate(-1);
     };
 
-    const [open, setOpen] = useState(false);
-    const handleOpen = () => setOpen(true);
+    const handleOpenModal = () => setOpenModal(true);
     const handleClose = () => {
-        setOpen(false);
+        setOpenModal(false);
         handleVoltar()
     }
 
     useEffect(() => {
+        carregaDadosTransacao()
+    }, [])
+
+    useEffect(() => {
         let timer;
-        if (open) {
+        if (openModel) {
           timer = setTimeout(() => {
             handleClose();
           }, 1500);
         }
         return () => clearTimeout(timer); 
-    }, [open]);
+    }, [openModel]);
 
     return (
         <Div>
@@ -174,7 +176,7 @@ const AdicionaDoacao = ({ selectMenuItems }) => {
                                     onChange={handleInputChange}
                                 >
                                     <MenuItem value="" disabled>Selecione uma transação</MenuItem>
-                                    {selectMenuItems?.transacoes.map(transacao => {
+                                    {listaTransacoes?.map(transacao => {
                                         return <MenuItem value={transacao.codigo} key={transacao.codigo}>{transacao.valor}</MenuItem>
                                     })}
                                 </Select>
@@ -183,9 +185,9 @@ const AdicionaDoacao = ({ selectMenuItems }) => {
                                 <Autocomplete
                                     id="autocomplete-Produto"
                                     name="codigo_produto"
-                                    options={rows || []}
+                                    options={listaProdutos || []}
                                     getOptionLabel={(produto) => produto.nome}
-                                    value={formValues.codigo_produto ? rows.find((produto) => produto.codigo === formValues.codigo_produto) || null : null}
+                                    value={formValues.codigo_produto ? listaProdutos.find((produto) => produto.codigo === formValues.codigo_produto) || null : null}
                                     onChange={(event, newValue) => {
                                         handleInputChange({
                                             target: {
@@ -193,6 +195,10 @@ const AdicionaDoacao = ({ selectMenuItems }) => {
                                                 value: newValue ? newValue.codigo : "",
                                             },
                                         });
+                                    }}
+                                    onInputChange={async (event, newValue) => {
+                                        if(newValue.length > 3)
+                                            await carregaListaDeProdutos(newValue)
                                     }}
                                     renderInput={(params) => (
                                         <TextField
@@ -208,9 +214,9 @@ const AdicionaDoacao = ({ selectMenuItems }) => {
                                 <Autocomplete
                                     id="autocomplete-CNPJ_Destino"
                                     name="cnpj_destino"
-                                    options={pessoasJuridicas || []}
+                                    options={listaPessoaJuridica || []}
                                     getOptionLabel={(pj) => String(pj.razaoSocial)}
-                                    value={formValues.cnpj_destino ? pessoasJuridicas.find((pj) => pj.codigo === formValues.cnpj_destino) || null : null}
+                                    value={formValues.cnpj_destino ? listaPessoaJuridica.find((pj) => pj.codigo === formValues.cnpj_destino) || null : null}
                                     onChange={(event, newValue) => {
                                         handleInputChange({
                                             target: {
@@ -218,6 +224,10 @@ const AdicionaDoacao = ({ selectMenuItems }) => {
                                                 value: newValue ? newValue.codigo : "",
                                             },
                                         });
+                                    }}
+                                    onInputChange={async (event, newValue) => {
+                                        if(newValue.length > 3)
+                                            await carregaListaPessoasJuridicas(newValue)
                                     }}
                                     renderInput={(params) => (
                                         <TextField
@@ -229,11 +239,11 @@ const AdicionaDoacao = ({ selectMenuItems }) => {
                                     noOptionsText="Nenhuma instituição encontrada"
                                 />
                             </FormControl>
-                            {erro && <Typography variant="body2" sx={{ color: 'error.main', textAlign: 'center', fontWeight: 700 }}>Todos os campos devem ser preenchidos corretamente!</Typography>}
+                            {appContext.error && <Typography variant="body2" sx={{ color: 'error.main', textAlign: 'center', fontWeight: 700 }}>Todos os campos devem ser preenchidos corretamente!</Typography>}
                             <Button type="submit" variant="contained" color="secondary">
                                 Enviar
                             </Button>
-                            {!erro && <ModalFeedbackEnvio open={open} handleClose={handleClose} texto='Doação adicionada com sucesso!' />}
+                            {!appContext.error && <ModalFeedbackEnvio open={openModel} handleClose={handleClose} texto='Doação adicionada com sucesso!' />}
                         </Grid>
                     </Paper>
                 </Box>

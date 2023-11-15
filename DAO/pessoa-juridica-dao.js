@@ -1,10 +1,22 @@
 const PessoaJuridicaModel = require("../model/PessoaJuridica.js")
+const ProdutoModel = require("../model/Produto");
+const {Op} = require("sequelize");
 
 module.exports = {
     listar: async function(limite, pagina) {
         const pessoasJuridicas = await PessoaJuridicaModel.findAndCountAll({
             limit: limite,
             offset: (pagina - 1) * limite
+        })
+        return pessoasJuridicas
+    },
+
+    listarTodas: async function(substring) {
+        const pessoasJuridicas = await PessoaJuridicaModel.findAll({
+            where: {
+                isExcluido: false,
+                razaoSocial: { [Op.iLike]: `%${substring}%` }
+            }
         })
         return pessoasJuridicas
     },

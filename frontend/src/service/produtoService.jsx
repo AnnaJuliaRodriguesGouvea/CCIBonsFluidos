@@ -39,6 +39,20 @@ export async function listarProdutos(limit, page, setError) {
     }
 }
 
+export async function listarProdutosComEstoque(substring, setError) {
+    try {
+        const result = await axios.get(`http://localhost:3000/api/product/com-estoque/${substring}`, {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem("token")}`,
+            }
+        })
+        setError(null)
+        return result
+    } catch (err) {
+        setError(err);
+    }
+}
+
 export async function listaUmProduto(codigoDoProduto, setError) {
     try {
         const resultado = await axios.get(`http://localhost:3000/api/product/${codigoDoProduto}`, {

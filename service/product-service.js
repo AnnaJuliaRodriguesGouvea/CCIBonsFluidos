@@ -25,6 +25,16 @@ module.exports = {
         return {status: 500, data: "Desculpe, não foi possível realizar essa pesquisa"}
     },
 
+    productsListWithStock: async function(substring) {
+        const products = await produtoDao.listarComEstoque(substring)
+        if (products) {
+            if(products.length > 0)
+                return {status: 200, data: products}
+            return {status: 204, data: "Não possui dados suficientes"}
+        }
+        return {status: 500, data: "Desculpe, não foi possível realizar essa pesquisa"}
+    },
+
     searchCode: async function(codigo) {
         const access = await acessoService.getAcessoByCodigo(codigo)
         const product = await this.getProductByCode(codigo)

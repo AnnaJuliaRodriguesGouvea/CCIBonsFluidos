@@ -36,8 +36,14 @@ AcessoModel.hasMany(DoacaoModel, {
     foreignKey: 'codigo_acesso'
 })
 
+// TODO - mudar cnpj-destino para codigo_pj
 PessoaJuridicaModel.hasMany(DoacaoModel, {
     foreignKey: 'cnpj_destino'
 })
+
+DoacaoModel.belongsTo(PessoaJuridicaModel, {
+    foreignKey: 'cnpj_destino',
+    targetKey: 'codigo'
+});
 
 module.exports = DoacaoModel
