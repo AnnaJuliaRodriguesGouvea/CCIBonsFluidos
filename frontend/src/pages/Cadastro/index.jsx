@@ -83,6 +83,25 @@ const Cadastro = () => {
             handleOpen()
     }
 
+    const formatarCPF = (value) => {
+        return value
+            .replace(/\D/g, '')
+            .replace(/(\d{3})(\d)/, '$1.$2')
+            .replace(/(\d{3})(\d)/, '$1.$2')
+            .replace(/(\d{3})(\d{1,2})/, '$1-$2')
+            .replace(/(-\d{2})\d+?$/, '$1')
+    };
+
+    const formatarCNPJ = (value) => {
+        return value
+            .replace(/\D+/g, '')
+            .replace(/(\d{2})(\d)/, '$1.$2')
+            .replace(/(\d{3})(\d)/, '$1.$2')
+            .replace(/(\d{3})(\d)/, '$1/$2')
+            .replace(/(\d{4})(\d)/, '$1-$2')
+            .replace(/(-\d{2})\d+?$/, '$1')
+    };
+
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
         if (type === 'checkbox') {
@@ -91,9 +110,17 @@ const Cadastro = () => {
                 [name]: checked,
             });
         } else {
+            let valorFormatado = value
+
+            if (name === 'CPF') {
+                valorFormatado = formatarCPF(value);
+            } else if (name === 'CNPJ') {
+                valorFormatado = formatarCNPJ(value);
+            }
+
             setFormValues({
                 ...formValues,
-                [name]: value,
+                [name]: valorFormatado,
             });
         }
     };

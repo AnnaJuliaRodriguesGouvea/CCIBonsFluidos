@@ -216,7 +216,7 @@ const AdicionaDoacao = ({ selectMenuItems }) => {
                                         });
                                     }}
                                     onInputChange={async (event, newValue) => {
-                                        if(newValue.length > 3)
+                                        if(newValue.length > 2)
                                             if(formValues.codigo_transacao == 1)
                                                 await carregaListaDeProdutos(newValue, false)
                                             else if(formValues.codigo_transacao == 2)
@@ -248,7 +248,7 @@ const AdicionaDoacao = ({ selectMenuItems }) => {
                                         });
                                     }}
                                     onInputChange={async (event, newValue) => {
-                                        if(newValue.length > 3)
+                                        if(newValue.length > 2)
                                             await carregaListaPessoasJuridicas(newValue)
                                     }}
                                     renderInput={(params) => (
