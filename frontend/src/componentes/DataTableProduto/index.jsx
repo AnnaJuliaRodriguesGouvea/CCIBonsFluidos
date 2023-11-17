@@ -10,6 +10,7 @@ import {
     Typography
 } from "@mui/material"
 import ModalEdicaoProduto from "../ModalEdicaoProduto"
+import ModalExcluirProduto from "../ModalExcluirProduto/index.jsx";
 import {useContext, useEffect, useState} from "react";
 import {DadosParametrizacao} from "../../commom/context/dadosParametrizacao.jsx";
 import {
@@ -38,6 +39,7 @@ const DataTableProduto = () => {
     const [pageCount, setPageCount] = useState(1)
     const [limit, setLimit] = useState(5)
     const [isModalVisible, setIsModalVisible] = useState(false);
+    const [isExcluirVisible, setIsExcluirVisible] = useState(false)
     const [selectedRow, setSelectedRow] = useState(null);
 
     const showModal = (row) => {
@@ -48,6 +50,15 @@ const DataTableProduto = () => {
     const closeModal = () => {
         setIsModalVisible(false);
     };
+
+    const showExcluir = (row) => {
+        setSelectedRow(row)
+        setIsExcluirVisible(true)
+    }
+
+    const closeExcluir = () => {
+        setIsExcluirVisible(false)
+    }
 
     async function carregaDadosTipoAbsorvente(){
         setListaTiposAbsorventes(await getTiposAbsorvente(appContext.setError))
@@ -82,6 +93,7 @@ const DataTableProduto = () => {
         if (result && result.status == 200) {
             setPage(1)
             await carregaProdutos()
+            closeExcluir()
         }
     }
 
@@ -157,10 +169,10 @@ const DataTableProduto = () => {
                                             </Button>
                                         </TableCell>}
 
-                                        {/*TODO - deletando direto ao clicar no botão, sem popup - Lemersom */}
+                                        {/*FEITO - TODO - deletando direto ao clicar no botão, sem popup - Lemersom */}
                                         {isAdmin && <TableCell align="left" sx={{pl: 1}}>
                                             <Button
-                                                onClick={() => handleDeleteRow(row.codigo)}
+                                                onClick={() => showExcluir(row)}
                                                 variant="outlined"
                                                 sx={{
                                                     color: 'tomato',
@@ -186,6 +198,9 @@ const DataTableProduto = () => {
             </TableContainer>
             {selectedRow && (
                 <ModalEdicaoProduto dadosProduto={selectedRow} visible={isModalVisible} closeModal={closeModal} />
+            )}
+            {selectedRow && (
+                <ModalExcluirProduto visible={isExcluirVisible} closeModal={closeExcluir} clickExcluir={() => handleDeleteRow(selectedRow.codigo)}/>
             )}
             <Pagination
                 sx={{mt: 2,  mx: 'auto'}}
