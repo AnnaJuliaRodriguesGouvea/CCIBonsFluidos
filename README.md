@@ -6,8 +6,8 @@ O sistema **Solidary Flow** é uma aplicação web que foi desenvolvida para aux
 Em linhas gerais, este sistema ajudará a equipe do projeto a gerenciar eficientemente os produtos de higiene menstrual, desde o momento da aquisição até a distribuição para as meninas das escolas públicas de Cornélio Procópio.
 
 ### Funcionalidades
-- **Gerenciamente de Usuários**: Para garantir a segurança e o controle de acesso, o sistema permite: 
-    - *Cadastro de usuários (Pessoa Física ou Pessoa Júrica) com dois níveis de permissões:*
+- **Gerenciamento de Usuários**: Para garantir a segurança e o controle de acesso, o sistema permite: 
+    - *Cadastro de usuários (Pessoa Física ou Pessoa Jurídica) com dois níveis de permissões:*
         - Administradores: Possuem acesso total às funcionalidades do sistema: controle de produtos, controle de usuários e controle de entradas e saídas de produtos (doações).
         - Membros do projeto: Usuários comuns que possuem algumas limitações, ou seja, conseguem apenas listar os produtos existentes, administrar sua própria conta e registrar doações (entrada e/ou saída de produtos).
     - *Login:* é possível realizar o login com a conta cadastrada no sistema para ter acesso as suas funcionalidades.
@@ -15,7 +15,7 @@ Em linhas gerais, este sistema ajudará a equipe do projeto a gerenciar eficient
     - *Exclusão lógica:* é possível realizar a exclusão lógica da conta logada, ou seja, ao clicar em "Excluir" na tela **Minha Conta -> Perfil** é modificado o campo **isExcluido** para **true** na tabela **Acesso**.
 
 - **Controle de produtos de higiene menstrual:**
-    - *Cadastro:* posso realizar o cadastro de diversas marcas e tipos de absorvente que serão permitidos serem arrecadados para futura distribuição;
+    - *Cadastro:* posso realizar o cadastro de diversas marcas e tipos de absorventes que serão permitidos serem arrecadados para futura distribuição;
     - *Listagem:* traz todos os produtos cadastrados no sistema e suas devidas informações, exceto os excluídos, utilizando paginação;
     - *Atualização:* permite atualizar qualquer informação de um produto;
     - *Exclusão Lógica:* ao excluir um produto ele não é deletado do banco de dados, apenas é modificado o campo **isExcluido** para **true** na tabela **Produto** pois é necessário manter a informação de quantidade de pacotes no estoque - campo **quantidadeDePacote**.
@@ -28,7 +28,7 @@ Em linhas gerais, este sistema ajudará a equipe do projeto a gerenciar eficient
     - *Cadastro:* É possível registrar o tipo de transação da doação, ou seja, a entrada – isso inclui produtos doados por terceiros ou adquiridos pelo projeto – e a saída de produtos do estoque.
     - Não é possível alterar um registro de doação ou excluir qualquer registro, pois essa lógica de negócio diminui as chances de "fraude" dentro do projeto. 
         - Por exemplo: se um membro registrar que recebeu 50 pacotes de um produto no momento que está sendo monitorado e depois quiser fraudar o projeto, ele poderia editar mudando para 20 pacotes e roubar os outros 30.
-        - Outro exemplo: suponha que no projeto cada instituição só pode receber 500 pacotes no mes. Alguém no projeto pode editar uma doação alterando a instituição destino para que no histórico de doações uma determinada instituição não tenha recebido os 500 pacotes sendo que já recebeu.
+        - Outro exemplo: suponha que no projeto cada instituição só pode receber 500 pacotes no mês. Alguém no projeto pode editar uma doação alterando a instituição destino para que no histórico de doações uma determinada instituição não tenha recebido os 500 pacotes sendo que já recebeu.
     - *Listagem:* traz todas as transações (doações) utilizando paginação.
 
 ### Tecnologias utilizadas
@@ -46,7 +46,7 @@ O sistema utiliza as seguintes tecnologias:
             - Windows: https://www.youtube.com/watch?v=FaN1nQibHyY&t=271s
             - MacOS: https://www.youtube.com/watch?v=Z-iM7hUdBSg
             - Linux: https://www.youtube.com/watch?v=1jSb4LJH1dw
-        - OBS.: Lembre-se de instalar o pgAdmin!
+        - OBS.: Lembre-se de instalar o **pgAdmin**!
     - *Node.JS:* versão 18.15.0
         - Para realizar o download acesse o link **https://nodejs.org/en/download** e selecione o seu sistema operacional.
         - Após finalizar o download realize a instalação do programa. Abaixo segue tutoriais do youtube:
